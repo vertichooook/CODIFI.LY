@@ -1,0 +1,81 @@
+/* Специальная сетка для интерфейса обучения */
+.course-container {
+    display: grid;
+    grid-template-columns: 280px 1fr; /* Левая панель 280px, остальное контенту */
+    gap: 40px;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    min-height: calc(100vh - 70px);
+}
+
+/* Боковая панель */
+.course-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.sidebar-section h4 {
+    font-size: 0.75rem;
+    color: var(--dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+/* Кнопки языков (SQL/Python) */
+.lang-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.lang-badge {
+    padding: 4px 10px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.lang-badge.active {
+    border-color: var(--accent);
+    background: rgba(56, 189, 248, 0.1);
+}
+
+/* Список заданий */
+.task-scroll-list {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.task-scroll-list::-webkit-scrollbar { width: 4px; }
+.task-scroll-list::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+/* Основная рабочая область */
+.course-main {
+    background: transparent;
+}
+
+.task-header {
+    margin-bottom: 30px;
+}
+
+.task-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+/* Адаптивность */
+@media (max-width: 1000px) {
+    .course-container {
+        grid-template-columns: 1fr;
+    }
+    .course-sidebar {
+        order: 2;
+    }
+}

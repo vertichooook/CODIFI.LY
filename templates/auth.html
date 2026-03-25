@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — CodeStep</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ cache_v }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div style="font-weight: 900; color: var(--accent); font-size: 1.5rem;">CODESTEP</div>
+    </nav>
+
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <h2 style="margin-bottom: 10px;">{{ "С возвращением!" if mode == 'login' else "Регистрация" }}</h2>
+            <p style="color: var(--dim); margin-bottom: 25px; font-size: 0.9rem;">Введите данные для доступа к платформе</p>
+
+            <form method="POST">
+                <label style="font-size: 0.8rem; color: var(--dim);">Логин</label>
+                <input type="text" name="username" required autocomplete="off">
+
+                <label style="font-size: 0.8rem; color: var(--dim);">Пароль</label>
+                <input type="password" name="password" required>
+
+                {% if mode == 'register' %}
+                <label style="font-size: 0.8rem; color: var(--dim);">Выберите первый язык</label>
+                <select name="initial_lang">
+                    {% for lang in all_langs %}
+                    <option value="{{ lang }}">{{ lang.upper() }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+
+                <button type="submit" class="btn">{{ "Войти" if mode == 'login' else "Создать аккаунт" }}</button>
+            </form>
+
+            <div style="margin-top: 25px; text-align: center;">
+                <a href="{{ url_for('register' if mode == 'login' else 'login') }}" style="color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 600;">
+                    {{ "Нет аккаунта? Зарегистрироваться" if mode == 'login' else "Уже есть аккаунт? Войти" }}
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

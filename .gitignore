@@ -1,0 +1,11 @@
+# База данных
+instance/
+database.db
+
+# Кэш Python
+__pycache__/
+*.pyc
+
+# Виртуальное окружение
+venv/
+.env

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeStep — Обучение</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ cache_v }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div style="font-weight: 900; color: var(--accent); font-size: 1.4rem;">CODESTEP</div>
+        <div style="display: flex; align-items: center; gap: 25px;">
+            <div style="background: rgba(56, 189, 248, 0.1); color: var(--accent); padding: 6px 16px; border-radius: 20px; font-weight: 800;">
+                <span id="user-xp">{{ current_user.xp }}</span> XP
+            </div>
+            <a href="{{ url_for('logout') }}" style="color: var(--dim); text-decoration: none; font-size: 0.9rem;">Выйти</a>
+        </div>
+    </nav>
+
+    <div class="course-layout">
+        <aside class="sidebar">
+            <h4>Задания курса</h4>
+            <div id="task-sidebar"></div>
+        </aside>
+
+        <main class="main-content">
+            <div id="welcome-msg">
+                <h1 style="font-size: 3rem;">Выбери урок, чтобы начать</h1>
+            </div>
+
+            <div id="task-area" style="display: none;">
+                <h1 id="task-title" style="margin-bottom: 5px;"></h1>
+                <p id="task-module" style="color: var(--accent); font-weight: 800; font-size: 0.8rem; margin-bottom: 30px;"></p>
+
+                <div id="step-theory">
+                    <div id="theory-text" class="theory-content"></div>
+                    <div class="nav-buttons">
+                        <button class="btn" onclick="goToStep('quiz')">Перейти к тесту →</button>
+                    </div>
+                </div>
+
+                <div id="step-quiz" style="display: none;">
+                    <h2 style="margin-bottom: 20px;">Проверка знаний</h2>
+                    <p id="quiz-question" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+                    <div id="quiz-options"></div>
+                    <div id="quiz-feedback"></div>
+                    <div class="nav-buttons">
+                        <button class="btn-outline" onclick="goToStep('theory')">← К теории</button>
+                        <button id="next-to-practice" class="btn" style="display: none;" onclick="goToStep('practice')">Верно! К практике →</button>
+                    </div>
+                </div>
+
+                <div id="step-practice" style="display: none;">
+                    <h2 style="margin-bottom: 10px;">Практика</h2>
+                    <p id="practice-desc" style="color: var(--dim); margin-bottom: 20px;"></p>
+                    <textarea id="code-editor" class="code-editor" spellcheck="false"></textarea>
+                    <div class="nav-buttons">
+                        <button class="btn-outline" onclick="goToStep('quiz')">← К тесту</button>
+                        <button class="btn" onclick="submitCode()">Проверить решение</button>
+                    </div>
+                    <p id="feedback" style="margin-top: 20px; font-weight: bold;"></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const courses = {{ courses|tojson }};
+        const userLangs = {{ user_langs|tojson }};
+        let currentLang = userLangs[0];
+        let currentTask = null;
+
+        // Инициализация редактора и перехват Tab
+        const editor = document.getElementById('code-editor');
+        editor.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault(); // Отменяем переход на другой объект
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+
+                // Вставляем 4 пробела в позицию курсора
+                this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+
+                // Возвращаем курсор на место (после вставленных пробелов)
+                this.selectionStart = this.selectionEnd = start + 4;
+            }
+        });
+
+        function initSidebar() {
+            const container = document.getElementById('task-sidebar');
+            container.innerHTML = "";
+            courses[currentLang].forEach((task, i) => {
+                const a = document.createElement('a');
+                a.className = 'task-link';
+                a.id = `link-${task.id}`;
+                a.innerText = `${i + 1}. ${task.title}`;
+                a.onclick = () => loadTask(task.id);
+                container.appendChild(a);
+            });
+        }
+
+        function loadTask(id) {
+            currentTask = courses[currentLang].find(t => t.id === id);
+            document.querySelectorAll('.task-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(`link-${id}`).classList.add('active');
+            document.getElementById('welcome-msg').style.display = 'none';
+            document.getElementById('task-area').style.display = 'block';
+            document.getElementById('task-title').innerText = currentTask.title;
+            document.getElementById('task-module').innerText = currentTask.module;
+            document.getElementById('theory-text').innerHTML = currentTask.theory;
+            goToStep('theory');
+        }
+
+        function goToStep(step) {
+            ['theory', 'quiz', 'practice'].forEach(s => {
+                document.getElementById(`step-${s}`).style.display = (s === step) ? 'block' : 'none';
+            });
+            if (step === 'quiz') renderQuiz();
+            if (step === 'practice') {
+                document.getElementById('practice-desc').innerText = currentTask.task;
+                document.getElementById('feedback').innerText = "";
+                editor.value = ""; // Очищаем редактор для новой задачи
+            }
+        }
+
+        function renderQuiz() {
+            const q = currentTask.quiz;
+            document.getElementById('quiz-question').innerText = q.question;
+            document.getElementById('quiz-feedback').innerText = "";
+            document.getElementById('next-to-practice').style.display = "none";
+
+            const container = document.getElementById('quiz-options');
+            container.innerHTML = "";
+
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = opt;
+                btn.onclick = (e) => handleQuizAnswer(i, e.target);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleQuizAnswer(index, element) {
+            const correctIndex = currentTask.quiz.answer;
+            const feedback = document.getElementById('quiz-feedback');
+            const options = document.querySelectorAll('.quiz-option');
+
+            options.forEach(opt => opt.classList.remove('correct', 'wrong'));
+
+            if (index === correctIndex) {
+                element.classList.add('correct');
+                feedback.innerText = "✓ Правильно! Теперь закрепим на практике.";
+                feedback.style.color = "var(--success)";
+                document.getElementById('next-to-practice').style.display = "block";
+            } else {
+                element.classList.add('wrong');
+                feedback.innerText = "✕ Не совсем так. Попробуй еще раз.";
+                feedback.style.color = "var(--error)";
+            }
+        }
+
+        async function submitCode() {
+            const code = editor.value;
+            const response = await fetch('/check_code', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({lang: currentLang, id: currentTask.id, code: code})
+            });
+            const result = await response.json();
+            const f = document.getElementById('feedback');
+            if (result.success) {
+                f.innerText = "✓ Решено верно! +15 XP";
+                f.style.color = "var(--success)";
+                document.getElementById('user-xp').innerText = result.xp;
+                document.getElementById(`link-${currentTask.id}`).classList.add('done');
+            } else {
+                f.innerText = "✕ Ошибка. Проверь отступы и синтаксис.";
+                f.style.color = "var(--error)";
+            }
+        }
+
+        window.onload = initSidebar;
+    </script>
+</body>
+</html>

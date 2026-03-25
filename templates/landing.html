@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeStep — Твой путь в код</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ cache_v }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div style="font-weight: 900; color: var(--accent); font-size: 1.5rem;">CODESTEP</div>
+        <div>
+            <a href="{{ url_for('login') }}" style="color: white; text-decoration: none; margin-right: 20px;">Войти</a>
+            <a href="{{ url_for('register') }}" class="btn">Создать аккаунт</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>Твой путь в код начинается <span style="color: var(--accent);">здесь</span></h1>
+        <p>Изучай языки программирования через короткие уроки, интерактивные тесты и реальную практику прямо в браузере.</p>
+        <a href="{{ url_for('register') }}" class="btn" style="padding: 18px 50px; font-size: 1.1rem;">Начать бесплатно</a>
+    </header>
+
+    <section class="features">
+        <div class="card">
+            <div style="font-size: 2.5rem;">🐍</div>
+            <h3>Python & Data</h3>
+            <p>От основ синтаксиса до работы с базами данных и сложными алгоритмами.</p>
+        </div>
+        <div class="card">
+            <div style="font-size: 2.5rem;">🦀</div>
+            <h3>Rust & System</h3>
+            <p>Погрузись в мир высокопроизводительного кода и системного программирования.</p>
+        </div>
+        <div class="card">
+            <div style="font-size: 2.5rem;">⚙️</div>
+            <h3>Backend Guide</h3>
+            <p>Научись строить мощную архитектуру приложений на Flask и SQL с нуля.</p>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 40px; color: var(--dim); font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05);">
+        &copy; 2026 CodeStep Education. Сделано для будущих инженеров.
+    </footer>
+</body>
+</html>

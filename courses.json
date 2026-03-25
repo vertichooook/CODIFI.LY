@@ -1,0 +1,234 @@
+{
+  "python": [
+    {
+      "id": 1,
+      "title": "Функция print",
+      "module": "Основы",
+      "theory": "<div class='theory-subtitle'>Вывод данных</div>Функция <code>print()</code> — это способ программы «говорить» с тобой. <br><br><b>Правила:</b><br>1. Текст пишется в кавычках: <code>'Привет'</code>.<br>2. Числа пишутся без кавычек: <code>100</code>.<br>3. Можно выводить несколько элементов через запятую.",
+      "quiz": {
+        "question": "Как вывести текст Hello?",
+        "options": ["print(Hello)", "print('Hello')", "display('Hello')"],
+        "answer": 1
+      },
+      "task": "Напиши код, который выводит: Python",
+      "answer": "print('Python')"
+    },
+    {
+      "id": 2,
+      "title": "Переменные",
+      "module": "Основы",
+      "theory": "<div class='theory-subtitle'>Хранение данных</div>Переменная — это именованная ячейка памяти. <br><br><b>Пример:</b><br><code>score = 10</code><br>Здесь <code>score</code> — имя, а <code>10</code> — значение. Знак <code>=</code> — это оператор присваивания (положить значение в коробку).",
+      "quiz": {
+        "question": "Что делает оператор '='?",
+        "options": ["Сравнивает", "Присваивает значение", "Удаляет"],
+        "answer": 1
+      },
+      "task": "Создай переменную x со значением 42 и выведи её.",
+      "answer": "x = 42\nprint(x)"
+    },
+    {
+      "id": 3,
+      "title": "Типы данных: str и int",
+      "module": "Основы",
+      "theory": "В Python все данные делятся на типы:<br>1. <b>int</b> — целые числа (1, 10, -5).<br>2. <b>str</b> — строки (любой текст в кавычках).<br><br>Сложение строк (конкатенация) просто склеивает их: <code>'А' + 'Б' = 'АБ'</code>.",
+      "quiz": {
+        "question": "Какой тип у значения '5'?",
+        "options": ["Integer (число)", "String (строка)", "Boolean"],
+        "answer": 1
+      },
+      "task": "Выведи результат сложения строк 'Py' и 'thon'",
+      "answer": "print('Py' + 'thon')"
+    },
+    {
+      "id": 4,
+      "title": "Арифметика",
+      "module": "Основы",
+      "theory": "Основные знаки:<br><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>.<br><b>Особые:</b><br><code>**</code> — степень (2**3 = 8).<br><code>//</code> — целочисленное деление (7 // 2 = 3).<br><code>%</code> — остаток от деления (7 % 2 = 1).",
+      "quiz": {
+        "question": "Чему равно 10 % 3?",
+        "options": ["3", "1", "0.3"],
+        "answer": 1
+      },
+      "task": "Выведи 2 в 10-й степени.",
+      "answer": "print(2 ** 10)"
+    },
+    {
+      "id": 5,
+      "title": "Ввод данных (input)",
+      "module": "Основы",
+      "theory": "Функция <code>input()</code> останавливает программу и ждет, пока пользователь что-то напечатает. <br><b>Внимание:</b> всё, что ввел пользователь, считается <b>строкой</b>. Чтобы получить число, используй <code>int(input())</code>.",
+      "quiz": {
+        "question": "Тип данных после input()?",
+        "options": ["int", "str", "float"],
+        "answer": 1
+      },
+      "task": "Считай ввод в переменную v и выведи её.",
+      "answer": "v = input()\nprint(v)"
+    },
+    {
+      "id": 6,
+      "title": "Условия if",
+      "module": "Логика",
+      "theory": "Конструкция <code>if</code> проверяет условие. Если оно верно (True), выполняется код с <b>отступом</b> (4 пробела).<br><code>if x > 0:</code><br>&nbsp;&nbsp;&nbsp;&nbsp;<code>print('Положительное')</code>",
+      "quiz": {
+        "question": "Зачем нужны отступы в Python?",
+        "options": ["Для красоты", "Для определения блоков кода", "Они не важны"],
+        "answer": 1
+      },
+      "task": "Если 10 > 5, выведи 'Win'",
+      "answer": "if 10 > 5:\n    print('Win')"
+    },
+    {
+      "id": 7,
+      "title": "Логика else",
+      "module": "Логика",
+      "theory": "Блок <code>else</code> выполняется, если условие в <code>if</code> оказалось ложным.<br><code>if x > 10: ... else: ...</code>",
+      "quiz": {
+        "question": "Может ли else работать без if?",
+        "options": ["Да", "Нет"],
+        "answer": 1
+      },
+      "task": "Создай a=5. Если a > 10 выведи 'H', иначе 'L'",
+      "answer": "a = 5\nif a > 10:\n    print('H')\nelse:\n    print('L')"
+    },
+    {
+      "id": 8,
+      "title": "Сравнение: == и !=",
+      "module": "Логика",
+      "theory": "<code>==</code> — проверка на равенство.<br><code>!=</code> — проверка на неравенство.<br><b>Важно:</b> не путай <code>=</code> (присвоить) и <code>==</code> (сравнить).",
+      "quiz": {
+        "question": "Как проверить, что x НЕ равен 0?",
+        "options": ["x =! 0", "x != 0", "x not 0"],
+        "answer": 1
+      },
+      "task": "Выведи результат сравнения 10 == 10",
+      "answer": "print(10 == 10)"
+    },
+    {
+      "id": 9,
+      "title": "Оператор and",
+      "module": "Логика",
+      "theory": "Оператор <code>and</code> возвращает True, только если <b>оба</b> условия верны. <br>Пример: <code>(5 > 3) and (10 < 20)</code> — это истина.",
+      "quiz": {
+        "question": "Что выдаст (5 > 10) and (1 == 1)?",
+        "options": ["True", "False"],
+        "answer": 1
+      },
+      "task": "Выведи результат: True and True",
+      "answer": "print(True and True)"
+    },
+    {
+      "id": 10,
+      "title": "Оператор or",
+      "module": "Логика",
+      "theory": "Оператор <code>or</code> верен, если хотя бы <b>одно</b> из условий верно. <br>Пример: <code>(1 > 10) or (5 == 5)</code> — это True.",
+      "quiz": {
+        "question": "Что выдаст False or True?",
+        "options": ["True", "False"],
+        "answer": 0
+      },
+      "task": "Выведи результат: False or False",
+      "answer": "print(False or False)"
+    },
+    {
+      "id": 11,
+      "title": "Цикл while",
+      "module": "Циклы",
+      "theory": "Цикл <code>while</code> (пока) повторяет действия, пока условие истинно. <br><b>Важно:</b> внутри цикла нужно менять переменную, иначе цикл будет бесконечным.",
+      "quiz": {
+        "question": "Когда остановится while x < 5?",
+        "options": ["Когда x станет 5 или больше", "Никогда", "Сразу"],
+        "answer": 0
+      },
+      "task": "Создай x=0. Пока x < 2 выводи 'A' и прибавляй к x по 1.",
+      "answer": "x = 0\nwhile x < 2:\n    print('A')\n    x += 1"
+    },
+    {
+      "id": 12,
+      "title": "Цикл for",
+      "module": "Циклы",
+      "theory": "Цикл <code>for</code> перебирает элементы последовательности (например, диапазон чисел). <br><code>for i in range(3):</code> выполнится 3 раза.",
+      "quiz": {
+        "question": "Что делает цикл for?",
+        "options": ["Проверяет условие", "Перебирает элементы", "Рисует графики"],
+        "answer": 1
+      },
+      "task": "Циклом for и range(3) выведи 'Go'",
+      "answer": "for i in range(3):\n    print('Go')"
+    },
+    {
+      "id": 13,
+      "title": "range() подробно",
+      "module": "Циклы",
+      "theory": "<code>range(start, stop, step)</code><br>1. <code>range(5)</code> — от 0 до 4.<br>2. <code>range(1, 5)</code> — от 1 до 4.<br>3. <code>range(0, 10, 2)</code> — 0, 2, 4, 6, 8.",
+      "quiz": {
+        "question": "Включено ли последнее число в range(5)?",
+        "options": ["Да", "Нет"],
+        "answer": 1
+      },
+      "task": "Выведи список чисел от 0 до 2 через list(range(3))",
+      "answer": "print(list(range(3)))"
+    },
+    {
+      "id": 14,
+      "title": "Списки (list)",
+      "module": "Списки",
+      "theory": "Список — это коллекция данных в квадратных скобках. <br><code>nums = [10, 20, 30]</code>. <br>В списке могут быть разные типы данных.",
+      "quiz": {
+        "question": "Как объявить список?",
+        "options": ["(1, 2)", "{1, 2}", "[1, 2]"],
+        "answer": 2
+      },
+      "task": "Создай список a с цифрами 7 и 9. Выведи его.",
+      "answer": "a = [7, 9]\nprint(a)"
+    },
+    {
+      "id": 15,
+      "title": "Индексы",
+      "module": "Списки",
+      "theory": "Каждый элемент имеет номер (индекс). Отсчет с <b>0</b>! <br>Если <code>L = ['a', 'b']</code>, то <code>L[0]</code> это 'a'.",
+      "quiz": {
+        "question": "Индекс второго элемента?",
+        "options": ["0", "1", "2"],
+        "answer": 1
+      },
+      "task": "Выведи первый элемент списка [100, 200]",
+      "answer": "print([100, 200][0])"
+    },
+    { "id": 16, "title": "Добавление: append", "module": "Списки", "theory": "Метод <code>append(x)</code> добавляет элемент x в самый конец списка.", "quiz": {"question": "Куда добавляет append?", "options": ["В начало", "В конец"], "answer": 1}, "task": "Создай L=[1]. Добавь туда 2 и выведи L.", "answer": "L=[1]\nL.append(2)\nprint(L)" },
+    { "id": 17, "title": "Длина len()", "module": "Списки", "theory": "Функция <code>len()</code> возвращает количество элементов в списке или символов в строке.", "quiz": {"question": "len('Hi') вернет?", "options": ["1", "2", "3"], "answer": 1}, "task": "Выведи длину списка [1, 2, 3, 4]", "answer": "print(len([1, 2, 3, 4]))" },
+    { "id": 18, "title": "Срезы списков", "module": "Списки", "theory": "<code>L[start:stop]</code> копирует часть списка. Индекс stop не включается.", "quiz": {"question": "L[0:2] берет элементы:", "options": ["0 и 1", "0, 1, 2"], "answer": 0}, "task": "Выведи срез [1:3] от списка [0, 10, 20, 30]", "answer": "print([0, 10, 20, 30][1:3])" },
+    { "id": 19, "title": "Изменение списков", "module": "Списки", "theory": "Списки можно менять: <code>L[0] = 500</code> заменит первый элемент на 500.", "quiz": {"question": "Можно ли менять списки?", "options": ["Да", "Нет"], "answer": 0}, "task": "L=[1, 2]. Замени первый элемент на 0 и выведи L.", "answer": "L=[1, 2]\nL[0] = 0\nprint(L)" },
+    { "id": 20, "title": "Удаление: pop", "module": "Списки", "theory": "Метод <code>pop()</code> удаляет последний элемент. <code>pop(0)</code> удалит первый.", "quiz": {"question": "Что делает pop() без аргументов?", "options": ["Удаляет первый", "Удаляет последний"], "answer": 1}, "task": "L=[1, 2]. Удали последний и выведи L.", "answer": "L=[1, 2]\nL.pop()\nprint(L)" },
+    { "id": 21, "title": "Методы строк: upper", "module": "Строки", "theory": "<code>.upper()</code> делает все буквы заглавными. <code>.lower()</code> — строчными.", "quiz": {"question": "Результат 'py'.upper()?", "options": ["py", "PY", "Py"], "answer": 1}, "task": "Выведи 'hello' заглавными буквами.", "answer": "print('hello'.upper())" },
+    { "id": 22, "title": "Метод split", "module": "Строки", "theory": "Разрезает строку на список слов по пробелу. <code>'a b'.split() -> ['a', 'b']</code>.", "quiz": {"question": "Что возвращает split()?", "options": ["Строку", "Список", "Число"], "answer": 1}, "task": "Разрежь строку 'A B' и выведи результат.", "answer": "print('A B'.split())" },
+    { "id": 23, "title": "f-строки", "module": "Строки", "theory": "Самый удобный способ вставки переменных в текст: <code>f'Значение: {x}'</code>.", "quiz": {"question": "Префикс f-строки?", "options": ["f", "s", "v"], "answer": 0}, "task": "n=5. Выведи f-строку 'N={n}'", "answer": "n=5\nprint(f'N={n}')" },
+    { "id": 24, "title": "Функции: def", "module": "Функции", "theory": "Функция — это именованный блок кода. Позволяет не писать одно и то же дважды.", "quiz": {"question": "Ключевое слово функции?", "options": ["func", "def", "action"], "answer": 1}, "task": "Создай функцию hello() которая печатает 'Hi'. Вызови её.", "answer": "def hello():\n    print('Hi')\nhello()" },
+    { "id": 25, "title": "Параметры функций", "module": "Функции", "theory": "Мы можем передавать данные в функцию через скобки: <code>def greet(name):</code>.", "quiz": {"question": "Что такое параметр?", "options": ["Переменная внутри функции", "Имя функции"], "answer": 0}, "task": "Создай f(x), выводящую x. Вызови f(7).", "answer": "def f(x):\n    print(x)\nf(7)" },
+    { "id": 26, "title": "Результат: return", "module": "Функции", "theory": "Инструкция <code>return</code> отправляет результат работы функции обратно в основную программу.", "quiz": {"question": "Что делает return?", "options": ["Печатает", "Возвращает значение", "Удаляет функцию"], "answer": 1}, "task": "Пусть f() возвращает 10. Выведи результат f().", "answer": "def f():\n    return 10\nprint(f())" },
+    { "id": 27, "title": "Область видимости", "module": "Функции", "theory": "Переменные, созданные внутри функции, не видны снаружи (локальные переменные).", "quiz": {"question": "Видна ли локальная переменная снаружи?", "options": ["Да", "Нет"], "answer": 1}, "task": "Выведи 'local' (просто текст).", "answer": "print('local')" },
+    { "id": 28, "title": "Словари (dict)", "module": "Структуры", "theory": "Словарь хранит данные парами «Ключ: Значение». <code>d = {'name': 'Ivan', 'age': 20}</code>.", "quiz": {"question": "Скобки словаря?", "options": ["[]", "{}", "()"], "answer": 1}, "task": "Создай словарь d с ключом 'id' и значением 1. Выведи его.", "answer": "d = {'id': 1}\nprint(d)" },
+    { "id": 29, "title": "Работа со словарем", "module": "Структуры", "theory": "Доступ к значению — по ключу: <code>d['name']</code>. Можно добавлять новые: <code>d['city'] = 'Omsk'</code>.", "quiz": {"question": "Как получить значение?", "options": ["По индексу", "По ключу"], "answer": 1}, "task": "Выведи d['a'] если d={'a': 5}", "answer": "d={'a': 5}\nprint(d['a'])" },
+    { "id": 30, "title": "Кортежи (tuple)", "module": "Структуры", "theory": "Похожи на списки, но их <b>нельзя менять</b> после создания. Скобки круглые: <code>(1, 2)</code>.", "quiz": {"question": "Можно ли изменить tuple?", "options": ["Да", "Нет"], "answer": 1}, "task": "Создай кортеж t=(10, 20) и выведи его.", "answer": "t=(10, 20)\nprint(t)" },
+    { "id": 31, "title": "Множества (set)", "module": "Структуры", "theory": "Хранят только уникальные элементы в случайном порядке. Дубликаты удаляются автоматически.", "quiz": {"question": "Что будет в set([1, 1, 1])?", "options": ["{1, 1, 1}", "{1}"], "answer": 1}, "task": "Выведи set от списка [1, 2, 2].", "answer": "print(set([1, 2, 2]))" },
+    { "id": 32, "title": "Цикл for и списки", "module": "Циклы", "theory": "Самый частый прием: <code>for x in my_list:</code> — цикл по очереди берет каждый элемент.", "quiz": {"question": "Что попадет в x?", "options": ["Индекс", "Само значение"], "answer": 1}, "task": "Для списка [1, 2] выведи каждый элемент циклом for.", "answer": "for x in [1, 2]:\n    print(x)" },
+    { "id": 33, "title": "Ошибки try / except", "module": "Продвинутый", "theory": "Если код может вызвать ошибку (например, деление на 0), оберни его в <code>try</code>.", "quiz": {"question": "Зачем нужен except?", "options": ["Для выполнения кода при ошибке", "Для ускорения"], "answer": 0}, "task": "В try: 1/0, в except: print('Error')", "answer": "try:\n    1/0\nexcept:\n    print('Error')" },
+    { "id": 34, "title": "Генераторы списков", "module": "Продвинутый", "theory": "Быстрый способ создать список: <code>[x*2 for x in range(3)]</code> даст <code>[0, 2, 4]</code>.", "quiz": {"question": "Это короче обычного цикла?", "options": ["Да", "Нет"], "answer": 0}, "task": "Создай список [0, 1, 2] генератором и выведи.", "answer": "print([i for i in range(3)])" },
+    { "id": 35, "title": "Модуль math", "module": "Библиотеки", "theory": "<code>import math</code> дает доступ к <code>sqrt</code> (корень), <code>pi</code> (число Пи) и другим.", "quiz": {"question": "math.sqrt(9) это?", "options": ["3", "81", "9"], "answer": 0}, "task": "Импортируй math и выведи корень из 100.", "answer": "import math\nprint(math.sqrt(100))" },
+    { "id": 36, "title": "Модуль random", "module": "Библиотеки", "theory": "<code>random.randint(1, 10)</code> — случайное целое число от 1 до 10.", "quiz": {"question": "Что делает random?", "options": ["Считает сумму", "Генерирует случайность"], "answer": 1}, "task": "Импорт random, выведи random.randint(1, 1)", "answer": "import random\nprint(random.randint(1, 1))" },
+    { "id": 37, "title": "Классы (ООП)", "module": "ООП", "theory": "Класс — это чертеж. Объект — это дом, построенный по чертежу. <code>class Car: pass</code>.", "quiz": {"question": "Что такое класс?", "options": ["Функция", "Шаблон для объектов"], "answer": 1}, "task": "Создай пустой класс User.", "answer": "class User:\n    pass" },
+    { "id": 38, "title": "Конструктор __init__", "module": "ООП", "theory": "Метод, который запускается сам при создании объекта. В нем задают свойства (self.name = ...).", "quiz": {"question": "Что такое self?", "options": ["Ссылка на текущий объект", "Случайное слово"], "answer": 0}, "task": "Выведи слово 'init' (имитация).", "answer": "print('init')" },
+    { "id": 39, "title": "Наследование", "module": "ООП", "theory": "Класс может копировать всё из другого класса. <code>class Dog(Animal):</code>.", "quiz": {"question": "Зачем нужно наследование?", "options": ["Чтобы не дублировать код", "Чтобы запутать"], "answer": 0}, "task": "Выведи 'child inherits parent'", "answer": "print('child inherits parent')" },
+    { "id": 40, "title": "Lambda функции", "module": "Продвинутый", "theory": "Маленькие функции в одну строку без имени. <code>add = lambda x: x + 1</code>.", "quiz": {"question": "Lambda это?", "options": ["Цикл", "Анонимная функция"], "answer": 1}, "task": "Создай f = lambda x: x*2. Выведи f(5).", "answer": "f = lambda x: x*2\nprint(f(5))" },
+    { "id": 41, "title": "Работа с файлами", "module": "Файлы", "theory": "<code>with open('f.txt', 'w') as f:</code>. Режим 'w' — запись, 'r' — чтение.", "quiz": {"question": "Режим чтения?", "options": ["w", "r", "x"], "answer": 1}, "task": "Выведи 'open file'", "answer": "print('open file')" },
+    { "id": 42, "title": "Формат JSON", "module": "Данные", "theory": "Универсальный формат передачи данных. Библиотека <code>json</code> превращает его в словари.", "quiz": {"question": "Похож ли JSON на dict?", "options": ["Да", "Нет"], "answer": 0}, "task": "Импортируй модуль json.", "answer": "import json" },
+    { "id": 43, "title": "Библиотека Requests", "module": "Сеть", "theory": "Позволяет скачивать код страниц или данные из интернета.", "quiz": {"question": "Зачем requests?", "options": ["Для HTTP-запросов", "Для рисования"], "answer": 0}, "task": "Выведи 'get request'", "answer": "print('get request')" },
+    { "id": 44, "title": "Основы Flask", "module": "Backend", "theory": "Микро-фреймворк для создания веб-сайтов на Python.", "quiz": {"question": "Flask это?", "options": ["Игра", "Веб-фреймворк"], "answer": 1}, "task": "Выведи 'flask app'", "answer": "print('flask app')" },
+    { "id": 45, "title": "Декораторы @", "module": "Продвинутый", "theory": "Функция, которая оборачивает другую функцию, добавляя ей возможности.", "quiz": {"question": "Символ декоратора?", "options": ["#", "@", "$"], "answer": 1}, "task": "Выведи 'decorator applied'", "answer": "print('decorator applied')" },
+    { "id": 46, "title": "SQLite", "module": "Базы данных", "theory": "База данных, которая хранится в одном файле. Работает через SQL-запросы.", "quiz": {"question": "Где хранится SQLite?", "options": ["На сервере", "В локальном файле"], "answer": 1}, "task": "Выведи 'SELECT *'", "answer": "print('SELECT *')" },
+    { "id": 47, "title": "Virtualenv (venv)", "module": "Инструменты", "theory": "Изолированная «песочница» для каждого проекта, чтобы библиотеки не конфликтовали.", "quiz": {"question": "Зачем venv?", "options": ["Для изоляции библиотек", "Для паролей"], "answer": 0}, "task": "Выведи 'venv active'", "answer": "print('venv active')" },
+    { "id": 48, "title": "Типизация (Type Hints)", "module": "Стиль", "theory": "Указание типов для подсказок: <code>def f(x: int) -> int:</code>.", "quiz": {"question": "Обязательно ли это?", "options": ["Да", "Нет, это подсказки"], "answer": 1}, "task": "Выведи 'x: int'", "answer": "print('x: int')" },
+    { "id": 49, "title": "Асинхронность (asyncio)", "module": "Продвинутый", "theory": "Позволяет программе не ждать долгого ответа от сети, а делать другие задачи.", "quiz": {"question": "Ключевое слово?", "options": ["async", "wait", "fast"], "answer": 0}, "task": "Выведи 'asyncio'", "answer": "print('asyncio')" },
+    { "id": 50, "title": "ФИНАЛ", "module": "Итог", "theory": "Поздравляем! Ты прошел базу Python. Теперь ты можешь писать скрипты, сайты и ботов.", "quiz": {"question": "Готов стать профи?", "options": ["Да!", "Конечно!"], "answer": 0}, "task": "Выведи: Done", "answer": "print('Done')" }
+  ]
+}
