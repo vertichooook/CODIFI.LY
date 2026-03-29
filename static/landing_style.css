@@ -1,0 +1,253 @@
+/* --- ОСНОВНЫЕ ПЕРЕМЕННЫЕ --- */
+:root {
+    --l-bg: #010816;           /* Глубокий темный фон */
+    --l-accent: #38bdf8;       /* Голубой акцент */
+    --l-text: #f9fafb;         /* Белый текст */
+    --l-dim: #9ca3af;          /* Серый текст */
+    --l-grad: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc); /* Градиент как на фото */
+}
+
+/* --- СБРОС СТИЛЕЙ --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth; /* Плавный скролл до якорей */
+}
+
+body {
+    background-color: var(--l-bg);
+    color: var(--l-text);
+    line-height: 1.5;
+    overflow-x: hidden;
+    overflow-y: auto !important; /* ВАЖНО: Разрешаем прокрутку к блокам */
+}
+
+/* --- НАВИГАЦИЯ --- */
+.l-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 8%;
+    background: rgba(1, 8, 22, 0.8);
+    backdrop-filter: blur(12px);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.l-logo {
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: var(--l-text);
+    letter-spacing: -1.5px;
+    text-decoration: none;
+}
+
+.l-logo span {
+    color: var(--l-accent); /* Выделяем .LY */
+}
+
+.l-nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.l-link {
+    color: var(--l-dim);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-right: 30px;
+    transition: 0.3s;
+}
+
+.l-link:hover {
+    color: var(--l-accent);
+}
+
+.l-btn-small {
+    background: var(--l-text);
+    color: #000;
+    padding: 10px 22px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: 0.3s;
+}
+
+.l-btn-small:hover {
+    transform: scale(1.05);
+}
+
+/* --- ГЛАВНЫЙ ЭКРАН (HERO) --- */
+.hero {
+    padding: 200px 8% 120px;
+    text-align: center;
+    background: radial-gradient(circle at center, #1e1b4b 0%, transparent 70%);
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge {
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--l-accent);
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    display: inline-block;
+    margin-bottom: 25px;
+}
+
+.hero-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    margin-bottom: 25px;
+    line-height: 1.1;
+    letter-spacing: -3px;
+}
+
+.gradient-text {
+    background: var(--l-grad);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+
+#typed-text {
+    color: var(--l-text);
+    display: inline-block;
+    min-height: 1.1em;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: var(--l-dim);
+    max-width: 750px;
+    margin: 0 auto 45px;
+}
+
+.hero-subtitle strong {
+    color: var(--l-accent);
+    font-weight: 700;
+}
+
+.hero-btns {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.l-btn-primary {
+    background: var(--l-accent);
+    color: #000;
+    padding: 18px 42px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 800;
+    box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3);
+    transition: 0.3s;
+}
+
+.l-btn-secondary {
+    border: 1px solid #334155;
+    color: var(--l-text);
+    padding: 18px 42px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.l-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(56, 189, 248, 0.4); }
+.l-btn-secondary:hover { background: rgba(255,255,255, 0.05); }
+
+/* --- БЛОКИ ПРЕИМУЩЕСТВ (FEATURES) --- */
+.features {
+    padding: 100px 8%;
+    background: var(--l-bg);
+}
+
+.f-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.f-card {
+    background: rgba(15, 23, 42, 0.5);
+    padding: 45px;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(5px);
+}
+
+.f-card:hover {
+    transform: translateY(-15px);
+    border-color: var(--l-accent);
+    background: rgba(15, 23, 42, 0.8);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.f-icon {
+    font-size: 2.8rem;
+    margin-bottom: 25px;
+    display: block;
+}
+
+.f-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.f-card p {
+    color: var(--l-dim);
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+/* --- ФУТЕР --- */
+.l-footer {
+    padding: 80px 8% 50px;
+    background: #01040a;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.l-footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.l-footer p {
+    color: #4b5563;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* АДАПТИВНОСТЬ */
+@media (max-width: 768px) {
+    .hero-title { font-size: 2.8rem; letter-spacing: -1.5px; }
+    .hero-subtitle { font-size: 1.1rem; }
+    .hero-btns { flex-direction: column; }
+    .l-nav { padding: 15px 5%; }
+}

@@ -1,28 +1,32 @@
-import os
-import json
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import timedelta
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-very-secret-key-123'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Настройка времени жизни сессии (30 дней), чтобы не выкидывало из аккаунта
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
+
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 
-# --- МОДЕЛЬ ПОЛЬЗОВАТЕЛЯ ---
-class User(db.Model, UserMixin):
+# --- МОДЕЛЬ ДАННЫХ ---
+
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
     xp = db.Column(db.Integer, default=0)
-    # Здесь можно хранить список купленных или доступных языков через запятую
-    languages = db.Column(db.String(200), default='python')
+    # Храним ID уроков как строку через запятую: "1,2,3"
+    completed_lessons = db.Column(db.String(500), default="")
 
 
 @login_manager.user_loader
@@ -30,41 +34,28 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-# --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
-def load_courses():
-    with open('courses.json', 'r', encoding='utf-8') as f:
-        return json.load(f)
+# --- МАРШРУТЫ АУТЕНТИФИКАЦИИ ---
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
 
-def normalize_code(text):
-    """
-    Приводит код к единому виду для честной проверки:
-    - Заменяет двойные кавычки на одинарные
-    - Убирает лишние пробелы в начале/конце строк
-    - Игнорирует пустые строки
-    """
-    if not text:
-        return ""
-    # Заменяем " на '
-    text = text.replace('"', "'")
-    # Чистим каждую строку от лишних пробелов по бокам и убираем пустые строки
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
-    return "\n".join(lines)
+        user_exists = User.query.filter_by(username=username).first()
+        if user_exists:
+            flash('Это имя пользователя уже занято', 'danger')
+            return redirect(url_for('register'))
 
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        new_user = User(username=username, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
 
-# --- МАРШРУТЫ (ROUTES) ---
+        login_user(new_user, remember=True)
+        return redirect(url_for('course'))
 
-@app.route('/')
-@login_required
-def index():
-    courses = load_courses()
-    user_langs = current_user.languages.split(',')
-    # Добавляем временную метку для сброса кэша стилей
-    import time
-    return render_template('index.html',
-                           courses=courses,
-                           user_langs=user_langs,
-                           cache_v=int(time.time()))
+    return render_template('auth.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -75,29 +66,12 @@ def login():
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(url_for('index'))
-        flash('Неверное имя пользователя или пароль')
+            login_user(user, remember=True)
+            return redirect(url_for('course'))
+        else:
+            flash('Неверное имя пользователя или пароль', 'danger')
+
     return render_template('auth.html')
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        if User.query.filter_by(username=username).first():
-            flash('Пользователь уже существует')
-            return redirect(url_for('register'))
-
-        hashed_password = generate_password_hash(password)
-        new_user = User(username=username, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user)
-        return redirect(url_for('index'))
-    return render_template('register.html')
 
 
 @app.route('/logout')
@@ -107,32 +81,83 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/check_code', methods=['POST'])
+# --- ОСНОВНЫЕ МАРШРУТЫ ---
+
+@app.route('/')
+def index():
+    # УБРАН принудительный редирект в учебник.
+    # Теперь клик по логотипу всегда открывает главную (landing) страницу.
+    return render_template('index.html')
+
+
+@app.route('/course')
 @login_required
-def check_code():
-    data = request.json
-    lang = data.get('lang')
-    task_id = int(data.get('id'))
-    user_code = data.get('code', '')
+def course():
+    return render_template('course.html', user=current_user)
 
-    courses = load_courses()
-    # Ищем задачу по ID
-    task = next((t for t in courses[lang] if t['id'] == task_id), None)
 
-    if not task:
-        return jsonify({'success': False, 'error': 'Task not found'})
-
-    # Сравниваем нормализованный код пользователя и эталон
-    if normalize_code(user_code) == normalize_code(task['answer']):
-        current_user.xp += 15
-        db.session.commit()
-        return jsonify({'success': True, 'xp': current_user.xp})
+@app.route('/profile')
+@login_required
+def profile():
+    if current_user.completed_lessons:
+        completed_count = len([x for x in current_user.completed_lessons.split(',') if x.strip()])
     else:
-        return jsonify({'success': False})
+        completed_count = 0
+
+    total_lessons = 50
+    progress_percent = int((completed_count / total_lessons) * 100)
+    if progress_percent > 100:
+        progress_percent = 100
+
+    if current_user.xp < 100:
+        rank = "Новичок"
+    elif current_user.xp < 250:
+        rank = "Ученик"
+    elif current_user.xp < 400:
+        rank = "Программист"
+    else:
+        rank = "Python-Мастер"
+
+    return render_template('profile.html',
+                           user=current_user,
+                           completed_count=completed_count,
+                           total_lessons=total_lessons,
+                           progress_percent=progress_percent,
+                           rank=rank)
 
 
-# --- ЗАПУСК ---
+# --- API ДЛЯ ПРОГРЕССА ---
+
+@app.route('/api/get_progress')
+@login_required
+def get_progress():
+    if current_user.completed_lessons:
+        ids = [int(x) for x in current_user.completed_lessons.split(',') if x.strip()]
+    else:
+        ids = []
+    return jsonify({"completed_lessons": ids, "xp": current_user.xp})
+
+
+@app.route('/api/save_progress', methods=['POST'])
+@login_required
+def save_progress():
+    data = request.get_json()
+    lesson_id = str(data.get('lesson_id'))
+
+    user = User.query.get(current_user.id)
+    completed_list = [x.strip() for x in user.completed_lessons.split(',') if x.strip()]
+
+    if lesson_id not in completed_list:
+        completed_list.append(lesson_id)
+        user.completed_lessons = ",".join(completed_list)
+        user.xp += 15
+        db.session.commit()
+        return jsonify({"status": "success", "new_xp": user.xp})
+
+    return jsonify({"status": "already_done"})
+
+
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()  # Создаем базу данных, если её нет
-    app.run(debug=True)
+        db.create_all()
+    app.run(host='0.0.0.0', port=8080, debug=True)

@@ -3,44 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeStep — Твой путь в код</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ cache_v }}">
+    <title>Codifi.ly | Овладей кодом быстрее и проще</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --card-bg: #0b1120;
+            --accent-blue: #38bdf8;
+            --text-muted: #94a3b8;
+            --footer-gray: #64748b;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Навигация --- */
+        .navbar {
+            padding: 1.5rem 0;
+            background: transparent;
+        }
+        .logo { font-weight: 900; font-size: 1.6rem; text-decoration: none; display: flex; align-items: center; }
+        .logo-main { color: #fff; }
+        .logo-end { color: var(--accent-blue); }
+
+        .btn-nav-start {
+            background: #fff; color: #000; font-weight: 700;
+            padding: 8px 24px; border-radius: 50px; text-decoration: none; transition: 0.3s;
+        }
+        .btn-nav-start:hover { background: var(--accent-blue); color: #fff; }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            padding: 80px 0 60px;
+            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.07) 0%, transparent 70%);
+        }
+
+        .badge-promo {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Уменьшенный компактный заголовок */
+        .hero-title-compact {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        .typewriter-dynamic {
+            color: var(--accent-blue);
+            border-right: 3px solid var(--accent-blue);
+            margin-left: 8px;
+            animation: cursor-blink 0.8s infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes cursor-blink { 50% { border-color: transparent; } }
+
+        /* --- Кнопки --- */
+        .btn-main {
+            background: var(--accent-blue);
+            color: #000;
+            font-weight: 700;
+            padding: 16px 32px;
+            border-radius: 12px;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2); }
+
+        .btn-outline-custom {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+        }
+        .btn-outline-custom:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+        /* --- Карточки (Features) --- */
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            padding: 40px;
+            height: 100%;
+            transition: 0.4s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(56, 189, 248, 0.2);
+        }
+
+        .feature-icon { font-size: 2rem; margin-bottom: 1.2rem; display: block; }
+
+        /* --- Футер --- */
+        footer {
+            padding: 60px 0 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .footer-logo { opacity: 0.5; transition: 0.3s; text-decoration: none; }
+        .footer-logo:hover { opacity: 1; }
+        .footer-text { color: var(--footer-gray); font-size: 0.85rem; margin-top: 8px; }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div style="font-weight: 900; color: var(--accent); font-size: 1.5rem;">CODESTEP</div>
-        <div>
-            <a href="{{ url_for('login') }}" style="color: white; text-decoration: none; margin-right: 20px;">Войти</a>
-            <a href="{{ url_for('register') }}" class="btn">Создать аккаунт</a>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a href="/" class="logo"><span class="logo-main">CODIFI</span><span class="logo-end">.LY</span></a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <a href="/login" class="text-white text-decoration-none small fw-bold d-none d-sm-block">Войти</a>
+                <a href="/" class="btn-nav-start">Начать путь</a>
+            </div>
         </div>
     </nav>
 
-    <header class="hero">
-        <h1>Твой путь в код начинается <span style="color: var(--accent);">здесь</span></h1>
-        <p>Изучай языки программирования через короткие уроки, интерактивные тесты и реальную практику прямо в браузере.</p>
-        <a href="{{ url_for('register') }}" class="btn" style="padding: 18px 50px; font-size: 1.1rem;">Начать бесплатно</a>
+    <header class="hero-section text-center">
+        <div class="container">
+            <div class="mb-4">
+                <span class="badge-promo">Новое: Курс по Python 2026</span>
+            </div>
+            <h1 class="hero-title-compact">
+                <span class="d-block">Освой искусство</span>
+                <span>программирования <span id="typewriter" class="typewriter-dynamic"></span></span>
+            </h1>
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <p class="lead text-secondary mb-5" style="font-size: 1.1rem;">
+                        Интерактивная платформа для изучения программирования. <br class="d-none d-md-block">
+                        70 практических заданий, тесты и реальные проекты в одном месте.
+                    </p>
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                        <a href="/course" class="btn btn-main">Начать бесплатно</a>
+                        <button class="btn btn-outline-custom">Узнать больше</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <section class="features">
-        <div class="card">
-            <div style="font-size: 2.5rem;">🐍</div>
-            <h3>Python & Data</h3>
-            <p>От основ синтаксиса до работы с базами данных и сложными алгоритмами.</p>
-        </div>
-        <div class="card">
-            <div style="font-size: 2.5rem;">🦀</div>
-            <h3>Rust & System</h3>
-            <p>Погрузись в мир высокопроизводительного кода и системного программирования.</p>
-        </div>
-        <div class="card">
-            <div style="font-size: 2.5rem;">⚙️</div>
-            <h3>Backend Guide</h3>
-            <p>Научись строить мощную архитектуру приложений на Flask и SQL с нуля.</p>
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <span class="feature-icon">🚀</span>
+                        <h4 class="fw-bold mb-3">Быстрый старт</h4>
+                        <p class="text-secondary small">Никаких настроек. Просто открывай браузер и начинай писать свой первый код на Python.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <span class="feature-icon">🧠</span>
+                        <h4 class="fw-bold mb-3">Умная практика</h4>
+                        <p class="text-secondary small">Тесты после каждой темы помогают закрепить теорию, а встроенный редактор проверит ошибки.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <span class="feature-icon">🏆</span>
+                        <h4 class="fw-bold mb-3">Геймификация</h4>
+                        <p class="text-secondary small">Зарабатывай XP за каждое задание и соревнуйся с другими в таблице лидеров.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer style="text-align: center; padding: 40px; color: var(--dim); font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05);">
-        &copy; 2026 CodeStep Education. Сделано для будущих инженеров.
+    <footer class="text-center">
+        <div class="container">
+            <a href="/" class="logo footer-logo justify-content-center mb-1" style="font-size: 1.2rem;">
+                <span class="logo-main">CODIFI</span><span class="logo-end">.LY</span>
+            </a>
+            <p class="footer-text mb-0">
+                © 2026 Codifi.ly. Платформа для интерактивного обучения программированию.
+            </p>
+        </div>
     </footer>
+
+    <script>
+        const textElement = document.getElementById('typewriter');
+        const phrases = [
+            'на Python.',
+            'с чистого листа.',
+            'на практике.',
+            'без боли.',
+            'с результатом.'
+        ];
+
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+
+            if (isDeleting) {
+                textElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                textElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 60 : 120;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        document.addEventListener('DOMContentLoaded', type);
+    </script>
 </body>
 </html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codifi.ly | Профиль</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-dark: #020617; --card-bg: #0f172a; --accent-blue: #38bdf8; --text-main: #f8fafc; --border: rgba(255, 255, 255, 0.1); }
+        body.light-mode { --bg-dark: #f1f5f9; --card-bg: #ffffff; --accent-blue: #0284c7; --text-main: #0f172a; --border: rgba(0, 0, 0, 0.1); }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; transition: 0.3s; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .main-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 40px; width: 100%; max-width: 450px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .avatar-big { width: 70px; height: 70px; background: var(--accent-blue); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; margin: 0 auto 15px; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
+        .lang-select { background: var(--bg-dark); color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <a href="/course" class="d-block text-start mb-4 text-decoration-none fw-bold" style="color: var(--accent-blue);">← <span data-i18n="back">Назад</span></a>
+        <div class="avatar-big">{{ user.username[0] | upper }}</div>
+        <h3 class="fw-bold mb-1">{{ user.username }}</h3>
+        <p class="opacity-50 small mb-4">{{ user.xp }} XP</p>
+
+        <div class="text-start">
+            <div class="setting-row">
+                <span data-i18n="theme">Тема оформления</span>
+                <button class="btn btn-sm btn-outline-secondary" onclick="toggleTheme()">🌓</button>
+            </div>
+            <div class="setting-row">
+                <span data-i18n="lang">Язык интерфейса</span>
+                <select class="lang-select" id="lang-select" onchange="changeLang(this.value)">
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                    <option value="de">Deutsch</option>
+                </select>
+            </div>
+        </div>
+        <a href="/logout" class="btn btn-danger w-100 mt-4" data-i18n="logout">Выйти из аккаунта</a>
+    </div>
+
+    <script>
+        const translations = {
+            ru: { back: "Назад", theme: "Тема оформления", lang: "Язык интерфейса", logout: "Выйти" },
+            en: { back: "Back", theme: "Theme", lang: "Language", logout: "Logout" },
+            de: { back: "Zurück", theme: "Thema", lang: "Sprache", logout: "Abmelden" }
+        };
+
+        function applySettings() {
+            const theme = localStorage.getItem('theme') || 'dark';
+            const lang = localStorage.getItem('lang') || 'ru';
+            document.body.className = theme === 'light' ? 'light-mode' : '';
+            document.getElementById('lang-select').value = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) el.innerText = translations[lang][key];
+            });
+        }
+
+        function toggleTheme() {
+            localStorage.setItem('theme', localStorage.getItem('theme') === 'light' ? 'dark' : 'light');
+            applySettings();
+        }
+
+        function changeLang(val) {
+            localStorage.setItem('lang', val);
+            applySettings();
+        }
+
+        window.onload = applySettings;
+    </script>
+</body>
+</html>

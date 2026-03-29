@@ -1,81 +1,170 @@
-/* Специальная сетка для интерфейса обучения */
-.course-container {
-    display: grid;
-    grid-template-columns: 280px 1fr; /* Левая панель 280px, остальное контенту */
-    gap: 40px;
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    min-height: calc(100vh - 70px);
+/* --- ОБНУЛЕНИЕ --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Боковая панель */
+:root {
+    --bg-dark: #020617;
+    --sidebar-bg: #0f172a;
+    --primary: #38bdf8;
+    --text-dim: #94a3b8;
+    --text-main: #f8fafc;
+    --border: #1e293b;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* --- САЙДБАР (ФИКСИРОВАН СЛЕВА) --- */
 .course-sidebar {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    bottom: 20px;
+    width: 320px;
+    background-color: var(--sidebar-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    padding: 20px;
+    z-index: 10;
+}
+
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .sidebar-section h4 {
+    margin-bottom: 20px;
+    color: var(--text-dim);
     font-size: 0.75rem;
-    color: var(--dim);
-    letter-spacing: 1px;
     text-transform: uppercase;
-    margin-bottom: 15px;
 }
 
-/* Кнопки языков (SQL/Python) */
-.lang-selector {
+.task-scroll-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* --- КОНТЕНТ (С ОТСТУПОМ ОТ САЙДБАРA) --- */
+.course-main {
+    margin-left: 340px;   /* Ширина сайдбара (320) + Gap (20) */
+    height: calc(100vh - 40px);
+    background-color: var(--sidebar-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* --- ЭЛЕМЕНТЫ СПИСКА (СЛЕВА) --- */
+.task-item {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.task-item:hover { background: rgba(255, 255, 255, 0.03); }
+.task-item.active { background: rgba(56, 189, 248, 0.1); color: var(--text-main); }
+
+.status-icon {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #334155;
+    margin-right: 12px;
+}
+
+.task-item.active .status-icon {
+    background: var(--primary);
+    box-shadow: 0 0 8px var(--primary);
+}
+
+/* --- СТИЛИ БЛОКОВ И ПРАКТИКИ --- */
+.theory-content {
+    background: rgba(2, 6, 23, 0.3);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
     margin-bottom: 20px;
 }
 
-.lang-badge {
-    padding: 4px 10px;
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 6px;
-    font-family: monospace;
-    font-size: 0.9rem;
-    cursor: pointer;
+/* Две колонки: Задание и Подсказка */
+.practice-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
-.lang-badge.active {
-    border-color: var(--accent);
-    background: rgba(56, 189, 248, 0.1);
+.info-card {
+    background: rgba(2, 6, 23, 0.3);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
 }
 
-/* Список заданий */
-.task-scroll-list {
-    max-height: 70vh;
-    overflow-y: auto;
-    padding-right: 10px;
-}
-
-.task-scroll-list::-webkit-scrollbar { width: 4px; }
-.task-scroll-list::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-
-/* Основная рабочая область */
-.course-main {
-    background: transparent;
-}
-
-.task-header {
-    margin-bottom: 30px;
-}
-
-.task-header h1 {
-    font-size: 2.5rem;
+.info-card h5 {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    text-transform: uppercase;
     margin-bottom: 10px;
 }
 
-/* Адаптивность */
-@media (max-width: 1000px) {
-    .course-container {
-        grid-template-columns: 1fr;
-    }
-    .course-sidebar {
-        order: 2;
-    }
+/* --- КНОПКИ (ИСПРАВЛЕННЫЙ СТИЛЬ) --- */
+button, .option-btn, .check-btn {
+    background-color: var(--primary) !important;
+    color: #000 !important;
+    border: none !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    font-family: 'Inter', sans-serif;
+    transition: 0.2s;
 }
+
+button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* --- РЕДАКТОР КОДА (УВЕЛИЧЕННЫЙ) --- */
+#editor {
+    width: 100%;
+    height: 300px; /* Большое поле */
+    background-color: #000;
+    color: #38bdf8;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+    margin-bottom: 15px;
+}
+
+/* Скроллбары */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
