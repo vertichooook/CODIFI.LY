@@ -10,7 +10,6 @@ app.config['SECRET_KEY'] = 'your-very-secret-key-123'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Настройка времени жизни сессии (30 дней), чтобы не выкидывало из аккаунта
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
 db = SQLAlchemy(app)
@@ -25,6 +24,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
     xp = db.Column(db.Integer, default=0)
+    coins = db.Column(db.Integer, default=0)
     # Храним ID уроков как строку через запятую: "1,2,3"
     completed_lessons = db.Column(db.String(500), default="")
 
@@ -105,25 +105,54 @@ def profile():
         completed_count = 0
 
     total_lessons = 50
-    progress_percent = int((completed_count / total_lessons) * 100)
-    if progress_percent > 100:
-        progress_percent = 100
+    course_progress = int((completed_count / total_lessons) * 100)
+    if course_progress > 100: course_progress = 100
 
     if current_user.xp < 100:
         rank = "Новичок"
-    elif current_user.xp < 250:
+    elif current_user.xp < 300:
         rank = "Ученик"
-    elif current_user.xp < 400:
+    elif current_user.xp < 600:
         rank = "Программист"
     else:
         rank = "Python-Мастер"
 
+    # Вычисление уровня (каждый следующий уровень требует больше XP)
+    level = 1
+    remaining_xp = current_user.xp
+    xp_for_next = 50
+    while remaining_xp >= xp_for_next:
+        remaining_xp -= xp_for_next
+        level += 1
+        xp_for_next = level * 50
+    
+    level_progress = int((remaining_xp / xp_for_next) * 100)
+    
+    # Достижения
+    achievements = []
+    if completed_count >= 1: achievements.append({"icon": "🌟", "name": "Первый шаг", "desc": "Пройден 1 урок"})
+    if completed_count >= 10: achievements.append({"icon": "🚀", "name": "Разгон", "desc": "Пройдено 10 уроков"})
+    if completed_count >= 25: achievements.append({"icon": "🔥", "name": "Энтузиаст", "desc": "Пройдена половина курса"})
+    if completed_count >= 50: achievements.append({"icon": "🏆", "name": "Гуру Python", "desc": "Весь курс завершён"})
+    
+    if level >= 1: achievements.append({"icon": "👶", "name": "Начинающий", "desc": "Достигнут 1-й уровень"})
+    if level >= 5: achievements.append({"icon": "⚔️", "name": "Продвинутый", "desc": "Достигнут 5-й уровень"})
+    
+    # Достижения за каждые 5 уровней (после 5-го)
+    for l in range(10, level + 1, 5):
+        achievements.append({"icon": "👑", "name": f"Мастер {l} уровня", "desc": f"Достигнут {l}-й уровень"})
+        
     return render_template('profile.html',
                            user=current_user,
                            completed_count=completed_count,
                            total_lessons=total_lessons,
-                           progress_percent=progress_percent,
-                           rank=rank)
+                           course_progress=course_progress,
+                           rank=rank,
+                           level=level,
+                           current_level_xp=remaining_xp,
+                           xp_for_next=xp_for_next,
+                           level_progress=level_progress,
+                           achievements=achievements)
 
 
 # --- API ДЛЯ ПРОГРЕССА ---
@@ -151,13 +180,20 @@ def save_progress():
         completed_list.append(lesson_id)
         user.completed_lessons = ",".join(completed_list)
         user.xp += 15
+        user.coins = getattr(user, 'coins', 0) + 5
         db.session.commit()
-        return jsonify({"status": "success", "new_xp": user.xp})
+        return jsonify({"status": "success", "new_xp": user.xp, "new_coins": user.coins})
 
     return jsonify({"status": "already_done"})
 
 
 if __name__ == '__main__':
+    from sqlalchemy import text
     with app.app_context():
         db.create_all()
+        try:
+            db.session.execute(text('ALTER TABLE user ADD COLUMN coins INTEGER DEFAULT 0'))
+            db.session.commit()
+        except:
+            db.session.rollback()
     app.run(host='0.0.0.0', port=8080, debug=True)

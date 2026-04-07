@@ -1,395 +1,808 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Codifi.ly | Learning</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Fira+Code&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Fira+Code&display=swap"
+        rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
-            --bg-dark: #0f172a; --sidebar-bg: #1e293b; --accent-blue: #38bdf8;
-            --accent-green: #10b981; --text-main: #f8fafc; --card-bg: #1A202C;
-            --border-color: rgba(255, 255, 255, 0.08); --text-muted: #94a3b8;
-            --code-bg: #010409; --code-text: #7ee787; --code-border: #30363d;
+            --bg-dark: #0f172a;
+            --sidebar-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-green: #10b981;
+            --text-main: #f8fafc;
+            --card-bg: #1A202C;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-muted: #94a3b8;
+            --code-bg: #010409;
+            --code-text: #7ee787;
+            --code-border: #30363d;
             --quiz-opt-bg: rgba(255, 255, 255, 0.02);
-            --quiz-correct-bg: rgba(16, 185, 129, 0.15); --quiz-correct-text: #f8fafc;
+            --quiz-correct-bg: rgba(16, 185, 129, 0.15);
+            --quiz-correct-text: #f8fafc;
             --scroll-thumb: rgba(56, 189, 248, 0.3);
             --inline-code-color: #f472b6;
         }
 
         body.light-mode {
-            --bg-dark: #f1f5f9; --sidebar-bg: #ffffff; --accent-blue: #0ea5e9;
-            --accent-green: #16a34a; --text-main: #0f172a; --card-bg: #ffffff;
-            --border-color: rgba(0, 0, 0, 0.08); --text-muted: #64748b;
-            --code-bg: #f8fafc; --code-text: #166534; --code-border: #e2e8f0;
+            --bg-dark: #f1f5f9;
+            --sidebar-bg: #ffffff;
+            --accent-blue: #0ea5e9;
+            --accent-green: #16a34a;
+            --text-main: #0f172a;
+            --card-bg: #ffffff;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --text-muted: #64748b;
+            --code-bg: #f8fafc;
+            --code-text: #166534;
+            --code-border: #e2e8f0;
             --quiz-opt-bg: rgba(0, 0, 0, 0.02);
-            --quiz-correct-bg: rgba(22, 163, 74, 0.1); --quiz-correct-text: #0f172a;
+            --quiz-correct-bg: rgba(22, 163, 74, 0.1);
+            --quiz-correct-text: #0f172a;
             --scroll-thumb: rgba(0, 0, 0, 0.1);
             --inline-code-color: #e11d48;
         }
 
-        /* Кастомный скроллбар */
-        .custom-scroll::-webkit-scrollbar { width: 8px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: var(--scroll-thumb); border-radius: 20px; border: 2px solid transparent; background-clip: content-box;
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
         }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: var(--scroll-thumb);
+            border-radius: 20px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
 
         body {
-            background-color: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif;
-            letter-spacing: -0.01em; overflow: hidden; margin: 0; transition: background 0.4s, color 0.4s;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.01em;
+            overflow: hidden;
+            margin: 0;
+            transition: background 0.4s, color 0.4s;
         }
 
-        /* Блюр фона */
-        #main-wrapper { transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s; height: 100vh; }
-        .blurred-background { filter: blur(15px) brightness(0.6); transform: scale(0.98); pointer-events: none; }
+        #main-wrapper {
+            transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s;
+            height: 100vh;
+        }
 
-        .course-progress-container { height: 4px; background: rgba(0,0,0,0.2); width: 100%; position: fixed; top: 0; z-index: 2005; }
-        #course-progress-bar { height: 100%; background: var(--accent-green); width: 0%; transition: 0.6s; box-shadow: 0 0 15px var(--accent-green); }
+        .blurred-background {
+            filter: blur(15px) brightness(0.6);
+            transform: scale(0.98);
+            pointer-events: none;
+        }
 
-        .sidebar { background-color: var(--sidebar-bg); height: 100vh; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 10; }
-        .logo { font-weight: 900; font-size: 1.5rem; text-decoration: none; color: var(--text-main); padding: 25px; display: block; }
-        .logo span { color: var(--accent-blue); }
+        .course-progress-container {
+            height: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 2005;
+        }
 
-        .profile-link { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; margin: 0 15px 20px 15px; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: 0.3s; }
-        .profile-link:hover { transform: translateY(-3px); border-color: var(--accent-blue); }
-        .avatar { width: 38px; height: 38px; background: var(--accent-blue); color: #fff !important; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; }
+        #course-progress-bar {
+            height: 100%;
+            background: var(--accent-green);
+            width: 0%;
+            transition: 0.6s;
+            box-shadow: 0 0 15px var(--accent-green);
+        }
 
-        .category-sidebar-title { font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 25px 0 10px 20px; opacity: 0.6; }
-        .task-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 18px; margin: 0 15px 6px 15px; cursor: pointer; color: var(--text-main); font-size: 0.88rem; transition: 0.2s ease; }
-        .task-card:hover { background: rgba(56, 189, 248, 0.05); border-color: rgba(56, 189, 248, 0.4); }
-        .task-card.active { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.1); }
-        .task-card.completed { border-color: var(--accent-green); color: var(--accent-green); font-weight: 600; }
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            height: 100vh;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .logo {
+            font-weight: 900;
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: var(--text-main);
+            padding: 25px;
+            display: block;
+        }
+
+        .logo span {
+            color: var(--accent-blue);
+        }
+
+        .profile-link {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px;
+            margin: 0 15px 20px 15px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.3s;
+        }
+
+        .profile-link:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-blue);
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            background: var(--accent-blue);
+            color: #fff !important;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+        }
+
+        .category-sidebar-title {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 25px 0 10px 20px;
+            opacity: 0.6;
+        }
+
+        .task-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 18px;
+            margin: 0 15px 6px 15px;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            transition: 0.2s ease;
+        }
+
+        .task-card:hover {
+            background: rgba(56, 189, 248, 0.05);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .task-card.active {
+            border-color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.1);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
+        }
+
+        .task-card.completed {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            font-weight: 600;
+        }
 
         /* Справочник */
-        #manual-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 3000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; }
-        #manual-overlay.show { opacity: 1; }
-        .manual-modal { background: var(--sidebar-bg); width: 95%; max-width: 1000px; height: 85vh; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.5); overflow: hidden; transform: translateY(20px) scale(0.98); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-        #manual-overlay.show .manual-modal { transform: translateY(0) scale(1); }
-        .manual-header { padding: 30px 40px 20px 40px; background: var(--sidebar-bg); border-bottom: 1px solid var(--border-color); flex-shrink: 0; z-index: 10; }
-        .manual-body { padding: 30px 40px; overflow-y: auto; flex-grow: 1; }
-        .manual-item { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; margin-bottom: 20px; transition: 0.2s; }
-        .search-input { background: var(--code-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 14px 20px; border-radius: 12px; width: 100%; outline: none; transition: 0.3s; font-size: 1rem; }
-        .search-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
+        #manual-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
-        /* Карточка урока */
-        .main-content { height: 100vh; overflow-y: auto; padding: 60px; display: flex; justify-content: center; align-items: flex-start; }
+        #manual-overlay.show {
+            opacity: 1;
+        }
+
+        .manual-modal {
+            background: var(--sidebar-bg);
+            width: 95%;
+            max-width: 1000px;
+            height: 85vh;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transform: translateY(20px) scale(0.98);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #manual-overlay.show .manual-modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .manual-header {
+            padding: 30px 40px 20px 40px;
+            background: var(--sidebar-bg);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .manual-body {
+            padding: 30px 40px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .manual-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: 0.2s;
+        }
+
+        .search-input {
+            background: var(--code-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 14px 20px;
+            border-radius: 12px;
+            width: 100%;
+            outline: none;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+        }
+
+        .main-content {
+            height: 100vh;
+            overflow-y: auto;
+            padding: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
         .content-card {
-            background: var(--card-bg); border-radius: 24px; padding: 50px 60px;
-            border: 1px solid var(--border-color); width: 100%; max-width: 900px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 50px 60px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
         }
 
-        .step-container { display: none; opacity: 0; }
-        .step-container.active { display: block; animation: slideUpBounce 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-
-        /* Типографика */
-        #l-title { color: var(--accent-blue); font-size: 1.8rem; letter-spacing: -0.02em; }
-        #l-theory h1, #l-theory h2 { font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: -0.02em; color: var(--text-main); }
-        #l-theory p, #l-theory li { font-size: 1.05rem; line-height: 1.7; color: rgba(255,255,255,0.9); }
-        body.light-mode #l-theory p, body.light-mode #l-theory li { color: rgba(0,0,0,0.8); }
-
-        .content-card code, .manual-item code {
-            color: var(--inline-code-color); font-family: 'Fira Code', monospace;
-            background: transparent; font-size: 0.95em; padding: 0;
+        .step-container {
+            display: none;
+            opacity: 0;
         }
 
-        /* Квизы */
+        .step-container.active {
+            display: block;
+            animation: slideUpBounce 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        #l-title {
+            color: var(--accent-blue);
+            font-size: 1.8rem;
+            letter-spacing: -0.02em;
+        }
+
+        #l-theory h1,
+        #l-theory h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        #l-theory p,
+        #l-theory li {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        body.light-mode #l-theory p,
+        body.light-mode #l-theory li {
+            color: rgba(0, 0, 0, 0.8);
+        }
+
+        .content-card code,
+        .manual-item code {
+            color: var(--inline-code-color);
+            font-family: 'Fira Code', monospace;
+            background: transparent;
+            font-size: 0.95em;
+            padding: 0;
+        }
+
         .quiz-option {
-            cursor: pointer; padding: 18px 24px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
-            margin-top: 12px; transition: 0.2s; background: var(--quiz-opt-bg); font-size: 1rem; color: var(--text-main); font-weight: 500;
+            cursor: pointer;
+            padding: 18px 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 12px;
+            transition: 0.2s;
+            background: var(--quiz-opt-bg);
+            font-size: 1rem;
+            color: var(--text-main);
+            font-weight: 500;
         }
-        .quiz-option:hover { background: rgba(255,255,255,0.06); }
-        .quiz-option.correct { background: var(--quiz-correct-bg) !important; border-color: var(--accent-green) !important; color: var(--quiz-correct-text) !important; }
-        .quiz-option.wrong { background: rgba(239, 68, 68, 0.1) !important; border-color: #ef4444 !important; color: #ef4444 !important; font-weight: 800; }
-        #q-explanation { margin-top: 20px; }
 
-        /* Кнопка */
-        .btn-action {
-            background: var(--accent-blue); color: #fff !important; border: none; border-radius: 12px; padding: 18px 24px;
-            font-weight: 700; cursor: pointer; width: 100%; transition: 0.2s; margin-top: 30px; font-size: 1.05rem;
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.06);
         }
-        .btn-action:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        .quiz-option.correct {
+            background: var(--quiz-correct-bg) !important;
+            border-color: var(--accent-green) !important;
+            color: var(--quiz-correct-text) !important;
+        }
+
+        .quiz-option.wrong {
+            background: rgba(239, 68, 68, 0.1) !important;
+            border-color: #ef4444 !important;
+            color: #ef4444 !important;
+            font-weight: 800;
+        }
+
+        #q-explanation {
+            margin-top: 20px;
+        }
+
+        .btn-action {
+            background: var(--accent-blue);
+            color: #fff !important;
+            border: none;
+            border-radius: 12px;
+            padding: 18px 24px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            margin-top: 30px;
+            font-size: 1.05rem;
+        }
+
+        .btn-action:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
 
         #code-input {
-            background: var(--code-bg); color: var(--code-text); font-family: 'Fira Code', monospace;
-            height: 280px; width: 100%; border-radius: 16px; padding: 20px; border: 1px solid var(--code-border);
-            margin-top: 20px; outline: none; font-size: 14px;
+            background: var(--code-bg);
+            color: var(--code-text);
+            font-family: 'Fira Code', monospace;
+            height: 280px;
+            width: 100%;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--code-border);
+            margin-top: 20px;
+            outline: none;
+            font-size: 14px;
         }
 
-        @keyframes slideUpBounce { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+        /* УВЕДОМЛЕНИЕ ОБ УСПЕХЕ (TOAST) */
+        .success-toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-green);
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+            z-index: 4000;
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-toast.show {
+            bottom: 40px;
+        }
+
+        @keyframes slideUpBounce {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
+
 <body class="custom-scroll">
-<script>
-    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
-</script>
+    <script>
+        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+    </script>
 
-<div class="course-progress-container"><div id="course-progress-bar"></div></div>
-
-<div id="manual-overlay" onclick="closeManual()">
-    <div class="manual-modal" onclick="event.stopPropagation()">
-        <div class="manual-header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="fw-bold m-0" style="color: var(--text-main);">📖 Справочник</h2>
-                <button class="btn-close" style="filter: var(--btn-filter);" onclick="closeManual()"></button>
-            </div>
-            <input type="text" id="manual-search" class="search-input" placeholder="Поиск по теории, функциям или урокам..." oninput="filterManual()">
-        </div>
-        <div id="m-content" class="manual-body custom-scroll" style="line-height: 1.7;"></div>
+    <div class="course-progress-container">
+        <div id="course-progress-bar"></div>
     </div>
-</div>
 
-<div id="main-wrapper" class="container-fluid p-0">
-    <div class="row g-0">
-        <div class="col-md-3 sidebar">
-            <a href="/" class="logo">CODIFI<span>.LY</span></a>
-            <a href="/profile" class="profile-link">
-                <div class="avatar">{{ user.username[0] | upper }}</div>
-                <div class="overflow-hidden">
-                    <div class="fw-bold text-truncate" style="color: var(--text-main);">{{ user.username }}</div>
-                    <div class="text-secondary small">{{ user.xp }} XP</div>
+    <div id="success-toast" class="success-toast">
+        <span style="font-size: 1.3rem;">🎉</span> <span id="toast-message">Урок успешно пройден!</span>
+    </div>
+
+    <div id="manual-overlay" onclick="closeManual()">
+        <div class="manual-modal" onclick="event.stopPropagation()">
+            <div class="manual-header">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="fw-bold m-0" style="color: var(--text-main);" data-i18n="manual_title">📖 Справочник</h2>
+                    <button class="btn-close" style="filter: var(--btn-filter);" onclick="closeManual()"></button>
                 </div>
-                <div class="ms-auto text-secondary opacity-50">⚙️</div>
-            </a>
-
-            <div id="sidebar-content" class="overflow-auto custom-scroll flex-grow-1"></div>
-
-            <div class="p-3">
-                <button class="btn btn-sm btn-outline-info w-100 mb-2 py-2 fw-bold" onclick="openManual()" data-i18n="manual_btn">📖 Справочник</button>
-                <button class="btn btn-sm btn-outline-success w-100 py-2 fw-bold" onclick="openSandbox()" data-i18n="sandbox">🧪 Песочница</button>
+                <input type="text" id="manual-search" class="search-input"
+                    placeholder="Поиск по теории, функциям или урокам..." data-i18n-placeholder="search_ph"
+                    oninput="filterManual()">
             </div>
-        </div>
-
-        <div class="col-md-9 main-content custom-scroll">
-            <div id="lesson-screen" class="content-card">
-                <div id="step-theory" class="step-container active">
-                    <h1 id="l-title" class="fw-bold mb-3"></h1>
-                    <div id="l-theory" class="mt-2"></div>
-                    <button id="start-quiz-btn" class="btn-action d-none" onclick="nextStep()" data-i18n="start_btn">Начать</button>
-                </div>
-
-                <div id="step-quiz" class="step-container">
-                    <h2 id="q-question" class="fw-bold mb-4" style="font-size: 1.6rem; color: var(--text-main);"></h2>
-                    <div id="q-options"></div>
-                    <div id="q-explanation" style="display:none;"></div>
-                    <button id="q-next-btn" class="btn-action d-none" onclick="nextStep()" data-i18n="next_btn">Далее</button>
-                </div>
-
-                <div id="step-practice" class="step-container">
-                    <h3 class="text-info fw-bold mb-3" data-i18n="practice_title">Практика</h3>
-                    <p id="p-task" class="fs-5 mb-4"></p>
-                    <textarea id="code-input" spellcheck="false" placeholder="# Напиши свой код здесь..."></textarea>
-                    <div id="p-feedback" class="mt-3"></div>
-                    <button id="check-btn" class="btn-action" onclick="checkCode()" data-i18n="check_btn">Запустить код</button>
-                </div>
-            </div>
+            <div id="m-content" class="manual-body custom-scroll" style="line-height: 1.7;"></div>
         </div>
     </div>
-</div>
 
-<script>
-    const translations = {
-        ru: { sandbox: "Песочница", manual_btn: "Справочник", start_btn: "Начать", next_btn: "Далее", practice_title: "Практика", check_btn: "Проверить код", correct: "✅ Верно!", wrong: "❌ Ошибка" },
-        en: { sandbox: "Sandbox", manual_btn: "Manual", start_btn: "Start", next_btn: "Next", practice_title: "Practice", check_btn: "Run Code", correct: "✅ Correct!", wrong: "❌ Wrong" },
-        de: { sandbox: "Sandkasten", manual_btn: "Handbuch", start_btn: "Starten", next_btn: "Weiter", practice_title: "Übung", check_btn: "Prüfen", correct: "✅ Richtig!", wrong: "❌ Falsch" }
-    };
+    <div id="main-wrapper" class="container-fluid p-0">
+        <div class="row g-0">
+            <div class="col-md-3 sidebar">
+                <a href="/" class="logo">CODIFI<span>.LY</span></a>
 
-    let tasksData = [], userProgress = [], currentLesson = null, currentStep = 0;
-    const lang = localStorage.getItem('lang') || 'ru';
-    const sounds = { success: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3') };
+                <a href="/profile" class="profile-link">
+                    <div class="avatar">{{ user.username[0] | upper }}</div>
+                    <div class="overflow-hidden">
+                        <div class="fw-bold text-truncate" style="color: var(--text-main);">{{ user.username }}</div>
+                        <div class="text-secondary small">{{ user.xp }} XP</div>
+                    </div>
+                    <div class="ms-auto text-secondary opacity-50">⚙️</div>
+                </a>
 
-    function getTxt(obj, field) {
-        const localized = `${field}_${lang}`;
-        return obj[localized] || obj[field] || "";
-    }
+                <div id="sidebar-content" class="overflow-auto custom-scroll flex-grow-1"></div>
 
-    async function init() {
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (translations[lang] && translations[lang][key]) el.innerText = translations[lang][key];
-        });
+                <div class="p-3">
+                    <button class="btn btn-sm btn-outline-info w-100 mb-2 py-2 fw-bold" onclick="openManual()"
+                        data-i18n="manual_btn">📖 Справочник</button>
+                    <button class="btn btn-sm btn-outline-success w-100 py-2 fw-bold" onclick="openSandbox()"
+                        data-i18n="sandbox">🧪 Песочница</button>
+                </div>
+            </div>
 
-        document.documentElement.style.setProperty('--btn-filter', localStorage.getItem('theme') === 'light' ? 'invert(0)' : 'invert(1)');
+            <div class="col-md-9 main-content custom-scroll">
+                <div id="lesson-screen" class="content-card">
+                    <div id="step-theory" class="step-container active">
+                        <h1 id="l-title" class="fw-bold mb-3"></h1>
+                        <div id="l-theory" class="mt-2"></div>
+                        <button id="start-quiz-btn" class="btn-action d-none" onclick="nextStep()"
+                            data-i18n="start_btn">Начать</button>
+                    </div>
 
-        try {
-            const res = await fetch('/static/courses.json');
-            tasksData = await res.json();
-            const prog = await fetch('/api/get_progress').then(r => r.json());
-            userProgress = prog.completed_lessons || [];
+                    <div id="step-quiz" class="step-container">
+                        <h2 id="q-question" class="fw-bold mb-4" style="font-size: 1.6rem; color: var(--text-main);">
+                        </h2>
+                        <div id="q-options"></div>
+                        <div id="q-explanation" style="display:none;"></div>
+                        <button id="q-next-btn" class="btn-action d-none" onclick="nextStep()"
+                            data-i18n="next_btn">Далее</button>
+                    </div>
 
-            renderSidebar();
-            updateGlobalProgress();
+                    <div id="step-practice" class="step-container">
+                        <h3 class="text-info fw-bold mb-3" data-i18n="practice_title">Практика</h3>
+                        <p id="p-task" class="fs-5 mb-4"></p>
+                        <textarea id="code-input" spellcheck="false"
+                            placeholder="# Напиши свой код здесь..."></textarea>
+                        <div id="p-feedback" class="mt-3"></div>
+                        <button id="check-btn" class="btn-action" onclick="checkCode()" data-i18n="check_btn">Запустить
+                            код</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            const firstRealTask = tasksData.find(t => t.id !== 0);
-            if (firstRealTask) loadLesson(firstRealTask);
-        } catch(e) { console.error(e); }
-    }
+    <script>
+        const translations = {
+            ru: { sandbox: "Песочница", manual_btn: "Справочник", manual_title: "📖 Справочник", search_ph: "Поиск по теории, функциям или урокам...", start_btn: "Начать", next_btn: "Далее", practice_title: "Практика", check_btn: "Проверить код", correct: "✅ Верно!", wrong: "❌ Ошибка", completed: "Урок успешно пройден!" },
+            en: { sandbox: "Sandbox", manual_btn: "Manual", manual_title: "📖 Manual", search_ph: "Search theory, functions or lessons...", start_btn: "Start", next_btn: "Next", practice_title: "Practice", check_btn: "Run Code", correct: "✅ Correct!", wrong: "❌ Wrong", completed: "Lesson completed successfully!" },
+            de: { sandbox: "Sandkasten", manual_btn: "Handbuch", manual_title: "📖 Handbuch", search_ph: "Theorie, Funktionen oder Lektionen suchen...", start_btn: "Starten", next_btn: "Weiter", practice_title: "Übung", check_btn: "Prüfen", correct: "✅ Richtig!", wrong: "❌ Falsch", completed: "Lektion erfolgreich abgeschlossen!" }
+        };
 
-    function openManual() {
-        const content = document.getElementById('m-content');
-        content.innerHTML = '';
+        let tasksData = [], userProgress = [], currentLesson = null, currentStep = 0;
+        const lang = localStorage.getItem('lang') || 'ru';
+        const sounds = { success: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3') };
 
-        const categories = [...new Set(tasksData.map(t => getTxt(t, 'category') || 'Остальное'))];
-        categories.forEach(cat => {
-            const categoryTasks = tasksData.filter(t => (getTxt(t, 'category') || 'Остальное') === cat && getTxt(t, 'theory').trim() !== '');
+        function getTxt(obj, field) {
+            const localized = `${field}_${lang}`;
+            return obj[localized] || obj[field] || "";
+        }
 
-            if (categoryTasks.length > 0) {
-                const blockDiv = document.createElement('div');
-                blockDiv.className = 'manual-category-block';
+        async function init() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) el.innerText = translations[lang][key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang] && translations[lang][key]) el.placeholder = translations[lang][key];
+            });
 
-                const catTitle = document.createElement('h3');
-                catTitle.className = 'fw-bold mt-4 mb-4';
-                catTitle.style.color = 'var(--accent-blue)';
-                catTitle.style.textTransform = 'uppercase';
-                catTitle.style.letterSpacing = '0.05em';
-                catTitle.style.fontSize = '0.9rem';
-                catTitle.style.borderBottom = '1px solid var(--border-color)';
-                catTitle.style.paddingBottom = '12px';
-                catTitle.innerText = cat;
-                blockDiv.appendChild(catTitle);
+            document.documentElement.style.setProperty('--btn-filter', localStorage.getItem('theme') === 'light' ? 'invert(0)' : 'invert(1)');
 
-                categoryTasks.forEach(task => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'manual-item';
-                    itemDiv.innerHTML = `<h4 class="text-white fw-bold mb-3">${task.id === 0 ? '📖' : task.id + '.'} ${getTxt(task, 'title')}</h4><div>${getTxt(task, 'theory')}</div>`;
-                    blockDiv.appendChild(itemDiv);
-                });
-                content.appendChild(blockDiv);
-            }
-        });
+            try {
+                const res = await fetch('/static/courses.json');
+                tasksData = await res.json();
+                const prog = await fetch('/api/get_progress').then(r => r.json());
+                userProgress = prog.completed_lessons || [];
 
-        document.getElementById('manual-search').value = '';
-        document.getElementById('main-wrapper').classList.add('blurred-background');
-        const overlay = document.getElementById('manual-overlay');
-        overlay.style.display = 'flex';
-        setTimeout(() => overlay.classList.add('show'), 10);
-    }
+                renderSidebar();
+                updateGlobalProgress();
 
-    function filterManual() {
-        const query = document.getElementById('manual-search').value.toLowerCase();
-        const blocks = document.querySelectorAll('.manual-category-block');
+                const firstRealTask = tasksData.find(t => t.id !== 0);
+                if (firstRealTask) loadLesson(firstRealTask);
+            } catch (e) { console.error(e); }
+        }
 
-        blocks.forEach(block => {
-            const items = block.querySelectorAll('.manual-item');
-            let visibleCount = 0;
-            items.forEach(item => {
-                const text = item.innerText.toLowerCase();
-                if (text.includes(query)) {
-                    item.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    item.style.display = 'none';
+        function openManual() {
+            const content = document.getElementById('m-content');
+            content.innerHTML = '';
+
+            // Убираем ID 0, так как он просто дублирует всё массивно
+            const validTasks = tasksData.filter(t => t.id !== 0 && getTxt(t, 'theory').trim() !== '');
+            const categories = [...new Set(validTasks.map(t => getTxt(t, 'category') || 'Остальное'))];
+
+            categories.forEach((cat, idx) => {
+                const categoryTasks = validTasks.filter(t => (getTxt(t, 'category') || 'Остальное') === cat);
+
+                if (categoryTasks.length > 0) {
+                    const blockDiv = document.createElement('div');
+                    blockDiv.className = 'manual-category-block';
+
+                    const catHeader = document.createElement('div');
+                    catHeader.style.cursor = 'pointer';
+                    catHeader.className = 'd-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2';
+                    catHeader.onclick = () => {
+                        const body = document.getElementById(`cat-body-${idx}`);
+                        const icon = document.getElementById(`cat-icon-${idx}`);
+                        if (body.style.display === 'none') {
+                            body.style.display = 'block';
+                            icon.innerText = '▼';
+                        } else {
+                            body.style.display = 'none';
+                            icon.innerText = '▶';
+                        }
+                    };
+
+                    const catTitle = document.createElement('h3');
+                    catTitle.className = 'fw-bold m-0';
+                    catTitle.style.color = 'var(--accent-blue)';
+                    catTitle.style.textTransform = 'uppercase';
+                    catTitle.style.letterSpacing = '0.05em';
+                    catTitle.style.fontSize = '0.9rem';
+                    catTitle.innerText = cat;
+
+                    const catIcon = document.createElement('span');
+                    catIcon.id = `cat-icon-${idx}`;
+                    catIcon.innerText = '▶';
+                    catIcon.style.color = 'var(--text-muted)';
+                    catIcon.style.fontSize = '0.8rem';
+
+                    catHeader.appendChild(catTitle);
+                    catHeader.appendChild(catIcon);
+                    blockDiv.appendChild(catHeader);
+
+                    const catBody = document.createElement('div');
+                    catBody.id = `cat-body-${idx}`;
+                    // По умолчанию закрыты
+                    catBody.style.display = 'none';
+
+                    categoryTasks.forEach(task => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'manual-item';
+                        itemDiv.innerHTML = `<h4 class="text-white fw-bold mb-3">${task.id}. ${getTxt(task, 'title')}</h4><div>${getTxt(task, 'theory')}</div>`;
+                        catBody.appendChild(itemDiv);
+                    });
+
+                    blockDiv.appendChild(catBody);
+                    content.appendChild(blockDiv);
                 }
             });
-            block.style.display = visibleCount > 0 ? 'block' : 'none';
-        });
-    }
 
-    function closeManual() {
-        const overlay = document.getElementById('manual-overlay');
-        overlay.classList.remove('show');
-        document.getElementById('main-wrapper').classList.remove('blurred-background');
-        setTimeout(() => overlay.style.display = 'none', 300);
-    }
+            document.getElementById('manual-search').value = '';
+            document.getElementById('main-wrapper').classList.add('blurred-background');
+            const overlay = document.getElementById('manual-overlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.classList.add('show'), 10);
+        }
 
-    function renderSidebar() {
-        const cont = document.getElementById('sidebar-content');
-        cont.innerHTML = '';
+        function filterManual() {
+            const query = document.getElementById('manual-search').value.toLowerCase();
+            const blocks = document.querySelectorAll('.manual-category-block');
 
-        const categories = [...new Set(tasksData.filter(t => t.id !== 0).map(t => getTxt(t, 'category')))];
-        categories.forEach(cat => {
-            const title = document.createElement('div');
-            title.className = 'category-sidebar-title';
-            title.innerText = cat;
-            cont.appendChild(title);
-            tasksData.filter(t => t.id !== 0 && getTxt(t, 'category') === cat).forEach(task => {
-                const card = document.createElement('div');
-                card.className = `task-card ${currentLesson?.id === task.id ? 'active' : ''} ${userProgress.includes(task.id) ? 'completed' : ''}`;
-                card.innerText = `${task.id}. ${getTxt(task, 'title')}`;
-                card.onclick = () => loadLesson(task);
-                cont.appendChild(card);
+            blocks.forEach(block => {
+                const items = block.querySelectorAll('.manual-item');
+                let visibleCount = 0;
+                items.forEach(item => {
+                    const text = item.innerText.toLowerCase();
+                    if (text.includes(query)) {
+                        item.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                block.style.display = visibleCount > 0 ? 'block' : 'none';
+
+                // Если мы ищем что-то, автоматически разворачиваем блок
+                const cBody = block.querySelector('[id^="cat-body-"]');
+                const cIcon = block.querySelector('[id^="cat-icon-"]');
+                if (query.trim() !== '') {
+                    if (cBody) cBody.style.display = 'block';
+                    if (cIcon) cIcon.innerText = '▼';
+                }
             });
-        });
-    }
+        }
 
-    function loadLesson(task) {
-        currentLesson = task; currentStep = 0;
-        const titlePrefix = task.id !== 0 && task.id !== 'sandbox' ? `${task.id}. ` : '';
-        document.getElementById('l-title').innerText = `${titlePrefix}${getTxt(task, 'title')}`;
-        document.getElementById('l-theory').innerHTML = getTxt(task, 'theory');
-        document.getElementById('start-quiz-btn').classList.remove('d-none');
-        renderSidebar();
-        showStep();
-    }
+        function closeManual() {
+            const overlay = document.getElementById('manual-overlay');
+            overlay.classList.remove('show');
+            document.getElementById('main-wrapper').classList.remove('blurred-background');
+            setTimeout(() => overlay.style.display = 'none', 300);
+        }
 
-    function showStep() {
-        document.querySelectorAll('.step-container').forEach(s => s.classList.remove('active'));
-        if (currentStep === 0) {
-            document.getElementById('step-theory').classList.add('active');
-        } else if (currentStep <= (currentLesson.quizzes ? currentLesson.quizzes.length : 0)) {
+        function renderSidebar() {
+            const cont = document.getElementById('sidebar-content');
+            cont.innerHTML = '';
+
+            const categories = [...new Set(tasksData.filter(t => t.id !== 0).map(t => getTxt(t, 'category')))];
+            categories.forEach(cat => {
+                const title = document.createElement('div');
+                title.className = 'category-sidebar-title';
+                title.innerText = cat;
+                cont.appendChild(title);
+                tasksData.filter(t => t.id !== 0 && getTxt(t, 'category') === cat).forEach(task => {
+                    const card = document.createElement('div');
+                    card.className = `task-card ${currentLesson?.id === task.id ? 'active' : ''} ${userProgress.includes(task.id) ? 'completed' : ''}`;
+                    card.innerText = `${task.id}. ${getTxt(task, 'title')}`;
+                    card.onclick = () => loadLesson(task);
+                    cont.appendChild(card);
+                });
+            });
+        }
+
+        function loadLesson(task) {
+            currentLesson = task; currentStep = 0;
+            const titlePrefix = task.id !== 0 && task.id !== 'sandbox' ? `${task.id}. ` : '';
+            document.getElementById('l-title').innerText = `${titlePrefix}${getTxt(task, 'title')}`;
+            document.getElementById('l-theory').innerHTML = getTxt(task, 'theory');
+            document.getElementById('start-quiz-btn').classList.remove('d-none');
+            renderSidebar();
+            showStep();
+        }
+
+        function showStep() {
+            document.querySelectorAll('.step-container').forEach(s => s.classList.remove('active'));
+            if (currentStep === 0) {
+                document.getElementById('step-theory').classList.add('active');
+            } else if (currentStep <= (currentLesson.quizzes ? currentLesson.quizzes.length : 0)) {
+                const q = currentLesson.quizzes[currentStep - 1];
+                document.getElementById('q-question').innerText = getTxt(q, 'question');
+
+                const opts = q[`options_${lang}`] || q.options;
+
+                document.getElementById('q-options').innerHTML = opts.map((o, i) =>
+                    `<div class="quiz-option" onclick="handleQuiz(this, ${i}, ${q.correct})">${o}</div>`
+                ).join('');
+                document.getElementById('q-explanation').style.display = 'none';
+                document.getElementById('q-next-btn').classList.add('d-none');
+                document.getElementById('step-quiz').classList.add('active');
+            } else {
+                document.getElementById('p-task').innerText = getTxt(currentLesson.practice, 'task');
+                document.getElementById('code-input').value = localStorage.getItem(`draft_${currentLesson.id}`) || "";
+                document.getElementById('step-practice').classList.add('active');
+            }
+        }
+
+        function handleQuiz(el, sel, cor) {
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(opt => opt.style.pointerEvents = 'none');
             const q = currentLesson.quizzes[currentStep - 1];
-            document.getElementById('q-question').innerText = getTxt(q, 'question');
-            document.getElementById('q-options').innerHTML = q.options.map((o, i) =>
-                `<div class="quiz-option" onclick="handleQuiz(this, ${i}, ${q.correct})">${o}</div>`
-            ).join('');
-            document.getElementById('q-explanation').style.display = 'none';
-            document.getElementById('q-next-btn').classList.add('d-none');
-            document.getElementById('step-quiz').classList.add('active');
-        } else {
-            document.getElementById('p-task').innerText = getTxt(currentLesson.practice, 'task');
-            document.getElementById('code-input').value = localStorage.getItem(`draft_${currentLesson.id}`) || "";
-            document.getElementById('step-practice').classList.add('active');
+            const exp = document.getElementById('q-explanation');
+
+            if (sel === cor) {
+                el.classList.add('correct');
+                exp.innerHTML = `<div style="color:var(--accent-green); font-weight:800; font-size:1.05rem; margin-bottom: 6px;">${translations[lang].correct}</div><div style="color:var(--accent-blue); font-size:1rem;">${getTxt(q, 'explanation')}</div>`;
+            } else {
+                el.classList.add('wrong');
+                options[cor].classList.add('correct');
+                exp.innerHTML = `<div style="color:#ef4444; font-weight:800; font-size:1.05rem; margin-bottom: 6px;">${translations[lang].wrong}</div><div style="color:var(--accent-blue); font-size:1rem;">${getTxt(q, 'explanation')}</div>`;
+            }
+            exp.style.display = 'block';
+            document.getElementById('q-next-btn').classList.remove('d-none');
         }
-    }
 
-    function handleQuiz(el, sel, cor) {
-        const options = document.querySelectorAll('.quiz-option');
-        options.forEach(opt => opt.style.pointerEvents = 'none');
-        const q = currentLesson.quizzes[currentStep - 1];
-        const exp = document.getElementById('q-explanation');
+        function nextStep() { currentStep++; showStep(); }
 
-        if (sel === cor) {
-            el.classList.add('correct');
-            exp.innerHTML = `<div style="color:var(--accent-green); font-weight:800; font-size:1.05rem; margin-bottom: 6px;">${translations[lang].correct}</div><div style="color:var(--accent-blue); font-size:1rem;">${getTxt(q, 'explanation')}</div>`;
-        } else {
-            el.classList.add('wrong');
-            options[cor].classList.add('correct');
-            exp.innerHTML = `<div style="color:#ef4444; font-weight:800; font-size:1.05rem; margin-bottom: 6px;">${translations[lang].wrong}</div><div style="color:var(--accent-blue); font-size:1rem;">${getTxt(q, 'explanation')}</div>`;
+        function showToast(msg) {
+            const toast = document.getElementById('success-toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
-        exp.style.display = 'block';
-        document.getElementById('q-next-btn').classList.remove('d-none');
-    }
 
-    function nextStep() { currentStep++; showStep(); }
+        function checkCode() {
+            sounds.success.play();
 
-    function checkCode() {
-        sounds.success.play();
-        const end = Date.now() + 1000;
-        const colors = ['#38bdf8', '#10b981', '#ffffff'];
-        (function frame() {
-            confetti({ particleCount: 4, angle: 60, spread: 60, origin: { x: 0 }, colors: colors });
-            confetti({ particleCount: 4, angle: 120, spread: 60, origin: { x: 1 }, colors: colors });
-            if (Date.now() < end) requestAnimationFrame(frame);
-        }());
-    }
+            // 1. Показываем уведомление
+            showToast(translations[lang].completed);
 
-    function updateGlobalProgress() {
-        const realTasks = tasksData.filter(t => t.id !== 0);
-        if (realTasks.length === 0) return;
-        const percent = (userProgress.length / realTasks.length) * 100;
-        document.getElementById('course-progress-bar').style.width = percent + '%';
-    }
+            // 2. Обновляем прогресс (если урок еще не пройден)
+            if (currentLesson && !userProgress.includes(currentLesson.id) && currentLesson.id !== 'sandbox') {
+                userProgress.push(currentLesson.id);
+                updateGlobalProgress();
+                renderSidebar();
+            }
 
-    function openSandbox() { loadLesson({ id: 'sandbox', title: 'Sandbox', theory: 'Свободный режим.', quizzes: [], practice: { task: "Experiment!" } }); }
+            // 3. Автоматический переход с задержкой в 1.5 секунды
+            setTimeout(() => {
+                if (!currentLesson || currentLesson.id === 'sandbox') return;
 
-    window.onload = init;
-</script>
+                const currentIndex = tasksData.findIndex(t => t.id === currentLesson.id);
+                let nextIndex = currentIndex + 1;
+
+                // Пропускаем справочник (id: 0), если он попался
+                while (nextIndex < tasksData.length && tasksData[nextIndex].id === 0) {
+                    nextIndex++;
+                }
+
+                if (nextIndex < tasksData.length) {
+                    loadLesson(tasksData[nextIndex]);
+                }
+            }, 1500);
+        }
+
+        function updateGlobalProgress() {
+            const realTasks = tasksData.filter(t => t.id !== 0);
+            if (realTasks.length === 0) return;
+            const percent = (userProgress.length / realTasks.length) * 100;
+            document.getElementById('course-progress-bar').style.width = percent + '%';
+        }
+
+        function openSandbox() { loadLesson({ id: 'sandbox', title: 'Sandbox', theory: 'Свободный режим.', quizzes: [], practice: { task: "Experiment!" } }); }
+
+        window.onload = init;
+    </script>
 </body>
+
 </html>

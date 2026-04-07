@@ -5,46 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Codifi.ly | Профиль</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-dark: #020617; --card-bg: #0f172a; --accent-blue: #38bdf8; --text-main: #f8fafc; --border: rgba(255, 255, 255, 0.1); }
-        body.light-mode { --bg-dark: #f1f5f9; --card-bg: #ffffff; --accent-blue: #0284c7; --text-main: #0f172a; --border: rgba(0, 0, 0, 0.1); }
-        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; transition: 0.3s; height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .main-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 40px; width: 100%; max-width: 450px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        .avatar-big { width: 70px; height: 70px; background: var(--accent-blue); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; margin: 0 auto 15px; }
-        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
-        .lang-select { background: var(--bg-dark); color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; }
+        :root { --bg-dark: #020617; --card-bg: #0f172a; --accent-blue: #38bdf8; --accent-gold: #fbbf24; --text-main: #f8fafc; --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.1); }
+        body.light-mode { --bg-dark: #f8fafc; --card-bg: #ffffff; --accent-blue: #0284c7; --accent-gold: #d97706; --text-main: #0f172a; --text-muted: #64748b; --border: rgba(0, 0, 0, 0.1); }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; transition: 0.3s; min-height: 100vh; padding: 40px 20px; }
+        .main-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 40px; width: 100%; max-width: 600px; margin: 0 auto; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        
+        .avatar-big { width: 90px; height: 90px; background: linear-gradient(135deg, var(--accent-blue), #818cf8); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; margin: 0 auto; box-shadow: 0 10px 20px rgba(56, 189, 248, 0.4); }
+        
+        .stat-badge { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); padding: 10px 15px; border-radius: 16px; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 1.1rem; }
+        body.light-mode .stat-badge { background: rgba(0, 0, 0, 0.04); }
+        
+        .progress-container { background: rgba(255,255,255,0.05); border-radius: 12px; height: 14px; width: 100%; overflow: hidden; margin-top: 8px; border: 1px solid var(--border); }
+        body.light-mode .progress-container { background: rgba(0,0,0,0.05); }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent-blue), #818cf8); border-radius: 12px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .progress-bar.gold { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        
+        .achievement-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; margin-top: 20px; }
+        .ach-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; padding: 15px 10px; text-align: center; transition: 0.2s; }
+        .ach-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.06); border-color: var(--accent-blue); cursor: default; }
+        body.light-mode .ach-card { background: rgba(0,0,0,0.02); }
+        body.light-mode .ach-card:hover { background: rgba(0,0,0,0.04); }
+        .ach-icon { font-size: 2.2rem; margin-bottom: 8px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+        .ach-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; line-height: 1.2; }
+        .ach-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.3; }
+
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
+        .lang-select { background: var(--bg-dark); color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-weight: 500;}
     </style>
 </head>
 <body>
     <div class="main-card">
-        <a href="/course" class="d-block text-start mb-4 text-decoration-none fw-bold" style="color: var(--accent-blue);">← <span data-i18n="back">Назад</span></a>
-        <div class="avatar-big">{{ user.username[0] | upper }}</div>
-        <h3 class="fw-bold mb-1">{{ user.username }}</h3>
-        <p class="opacity-50 small mb-4">{{ user.xp }} XP</p>
-
-        <div class="text-start">
-            <div class="setting-row">
-                <span data-i18n="theme">Тема оформления</span>
-                <button class="btn btn-sm btn-outline-secondary" onclick="toggleTheme()">🌓</button>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="/course" class="text-decoration-none fw-bold" style="color: var(--accent-blue); transition: 0.2s; opacity: 0.8;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">← <span data-i18n="back">К курсу</span></a>
+            <span class="badge" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56,189,248,0.3); color: var(--accent-blue); font-size: 0.9rem; padding: 8px 14px; border-radius: 30px;">
+                Уровень {{ level }} ({{ rank }})
+            </span>
+        </div>
+        
+        <div class="text-center mb-5 mt-2">
+            <div class="avatar-big mb-3">{{ user.username[0] | upper }}</div>
+            <h2 class="fw-bold mb-3">{{ user.username }}</h2>
+            <div class="d-flex justify-content-center gap-3">
+                <div class="stat-badge">
+                    <span style="color: var(--accent-blue);">⚡</span>
+                    <span>{{ user.xp }} XP</span>
+                </div>
+                <div class="stat-badge">
+                    <span style="color: var(--accent-gold);">🪙</span>
+                    <span><span id="coins-count">{{ user.coins }}</span> <span style="font-size: 0.9rem; font-weight: 500;" data-i18n="coins">Монет</span></span>
+                </div>
             </div>
-            <div class="setting-row">
-                <span data-i18n="lang">Язык интерфейса</span>
+        </div>
+
+        <div class="mb-4 bg-dark rounded-4 p-3" style="background: rgba(0,0,0,0.1) !important; border: 1px solid var(--border);">
+            <div class="d-flex justify-content-between small fw-bold mb-2">
+                <span data-i18n="next_level">До {{ level + 1 }} уровня</span>
+                <span style="color: var(--accent-blue);">{{ current_level_xp }} / {{ xp_for_next }} XP</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: {{ level_progress }}%"></div>
+            </div>
+        </div>
+        
+        <div class="mb-5 bg-dark rounded-4 p-3" style="background: rgba(0,0,0,0.1) !important; border: 1px solid var(--border);">
+            <div class="d-flex justify-content-between small fw-bold mb-2">
+                <span data-i18n="course_progress">Прогресс курса</span>
+                <span style="color: #fbbf24;">{{ completed_count }} / {{ total_lessons }} <span data-i18n="lessons" style="color: var(--text-muted); font-weight: normal;">уроков</span></span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar gold" style="width: {{ course_progress }}%"></div>
+            </div>
+        </div>
+
+        <h4 class="fw-bold mb-3 d-flex align-items-center gap-2">
+            🏆 <span data-i18n="achievements">Достижения</span>
+            <span class="badge" style="background: rgba(255,255,255,0.1); color: var(--text-muted); font-size: 0.8rem; border-radius: 20px;">{{ achievements|length }}</span>
+        </h4>
+        
+        <div class="achievement-grid mb-5">
+            {% for ach in achievements %}
+            <div class="ach-card">
+                <div class="ach-icon">{{ ach.icon }}</div>
+                <div class="ach-name">{{ ach.name }}</div>
+                <div class="ach-desc">{{ ach.desc }}</div>
+            </div>
+            {% else %}
+            <div class="w-100 text-center py-4" style="grid-column: 1 / -1; color: var(--text-muted); font-size: 0.95rem; background: rgba(0,0,0,0.1); border-radius: 12px; border: 1px dashed var(--border);">
+                <p class="mb-0" data-i18n="no_achievements">Пока нет достижений. Пройдите первый урок!</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-start rounded-4 p-3 mb-4" style="background: rgba(0,0,0,0.1); border: 1px solid var(--border);">
+            <div class="setting-row" style="border-bottom: 1px solid var(--border); padding-top: 0;">
+                <span class="fw-bold" data-i18n="theme">Тема оформления</span>
+                <button class="btn btn-sm fw-bold" style="background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--text-main);" onclick="toggleTheme()">🌓 <span data-i18n="toggle">Сменить</span></button>
+            </div>
+            <div class="setting-row" style="padding-bottom: 0;">
+                <span class="fw-bold" data-i18n="lang">Язык интерфейса</span>
                 <select class="lang-select" id="lang-select" onchange="changeLang(this.value)">
-                    <option value="ru">Русский</option>
-                    <option value="en">English</option>
-                    <option value="de">Deutsch</option>
+                    <option value="ru">🇷🇺 Русский</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="de">🇩🇪 Deutsch</option>
                 </select>
             </div>
         </div>
-        <a href="/logout" class="btn btn-danger w-100 mt-4" data-i18n="logout">Выйти из аккаунта</a>
+        
+        <a href="/logout" class="btn btn-danger w-100 rounded-3 py-3 fw-bold" style="font-size: 1.1rem; box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);" data-i18n="logout">Выйти из аккаунта</a>
     </div>
 
     <script>
         const translations = {
-            ru: { back: "Назад", theme: "Тема оформления", lang: "Язык интерфейса", logout: "Выйти" },
-            en: { back: "Back", theme: "Theme", lang: "Language", logout: "Logout" },
-            de: { back: "Zurück", theme: "Thema", lang: "Sprache", logout: "Abmelden" }
+            ru: { 
+                back: "К курсу", theme: "Тема оформления", lang: "Язык интерфейса", logout: "Выйти из аккаунта",
+                coins: "Монет", next_level: "До {{ level + 1 }} уровня", course_progress: "Прогресс курса",
+                lessons: "уроков", achievements: "Достижения", no_achievements: "Пока нет достижений. Пройдите первый урок!",
+                toggle: "Сменить"
+            },
+            en: { 
+                back: "To Course", theme: "Theme", lang: "Language", logout: "Logout",
+                coins: "Coins", next_level: "To Level {{ level + 1 }}", course_progress: "Course Progress",
+                lessons: "lessons", achievements: "Achievements", no_achievements: "No achievements yet. Complete your first lesson!",
+                toggle: "Toggle"
+            },
+            de: {
+                back: "Zum Kurs", theme: "Thema", lang: "Sprache", logout: "Abmelden",
+                coins: "Münzen", next_level: "Zu Level {{ level + 1 }}", course_progress: "Kursfortschritt",
+                lessons: "Lektionen", achievements: "Erfolge", no_achievements: "Noch keine Erfolge. Beende die erste Lektion!",
+                toggle: "Umschalten"
+            }
         };
 
         function applySettings() {
@@ -54,7 +145,7 @@
             document.getElementById('lang-select').value = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) el.innerText = translations[lang][key];
+                if (translations[lang] && translations[lang][key]) el.innerText = translations[lang][key];
             });
         }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codifi.ly | Овладей кодом</title>
+    <title>Codifi.ly</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -42,6 +42,9 @@
         .dropdown-item-danger { color: #f87171; margin-top: 5px; border-top: 1px solid rgba(255, 255, 255, 0.05); border-radius: 0 0 10px 10px; }
         .dropdown-item-danger:hover { background: rgba(239, 68, 68, 0.1); color: #ef4444; transform: translateX(5px); }
 
+        .lang-select-nav { background: transparent; color: #cbd5e1; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 4px 8px; margin-right: 15px; font-weight: 600; outline: none; }
+        .lang-select-nav option { background: var(--card-bg); color: #fff; }
+
         @media (max-width: 768px) {
             .profile-name { display: none; }
             .profile-btn { padding: 6px; }
@@ -53,56 +56,116 @@
     <nav class="navbar container d-flex justify-content-between align-items-center">
         <a href="/" class="logo">CODIFI<span>.LY</span></a>
 
-        {% if current_user.is_authenticated %}
-            <div class="profile-menu-container">
-                <div class="profile-btn" onclick="toggleDropdown(event)">
-                    <div class="profile-avatar">{{ current_user.username[0] | upper }}</div>
-                    <span class="profile-name">{{ current_user.username }}</span>
-                    <span class="text-muted" style="font-size: 0.7rem;">▼</span>
-                </div>
+        <div class="d-flex align-items-center">
+            <select class="lang-select-nav" id="nav-lang-select" onchange="changeLang(this.value)">
+                <option value="ru">RU</option>
+                <option value="en">EN</option>
+                <option value="de">DE</option>
+            </select>
 
-                <div class="dropdown-menu-custom" id="profileDropdown">
-                    <a href="/course" class="dropdown-item-custom">📚 Мои уроки</a>
-                    <a href="/profile" class="dropdown-item-custom">⚙️ Настройки (Профиль)</a>
-                    <a href="/logout" class="dropdown-item-custom dropdown-item-danger">🚪 Выйти из аккаунта</a>
+            {% if current_user.is_authenticated %}
+                <div class="profile-menu-container">
+                    <div class="profile-btn" onclick="toggleDropdown(event)">
+                        <div class="profile-avatar">{{ current_user.username[0] | upper }}</div>
+                        <span class="profile-name">{{ current_user.username }}</span>
+                        <span class="text-muted" style="font-size: 0.7rem;">▼</span>
+                    </div>
+
+                    <div class="dropdown-menu-custom" id="profileDropdown">
+                        <a href="/course" class="dropdown-item-custom" data-i18n="my_lessons">📚 Мои уроки</a>
+                        <a href="/profile" class="dropdown-item-custom" data-i18n="profile">⚙️ Настройки (Профиль)</a>
+                        <a href="/logout" class="dropdown-item-custom dropdown-item-danger" data-i18n="logout">🚪 Выйти из аккаунта</a>
+                    </div>
                 </div>
-            </div>
-        {% else %}
-            <a href="/login" class="btn btn-outline-light rounded-pill px-4 fw-bold">Войти</a>
-        {% endif %}
+            {% else %}
+                <a href="/login" class="btn btn-outline-light rounded-pill px-4 fw-bold" data-i18n="login">Войти</a>
+            {% endif %}
+        </div>
     </nav>
 
     <header class="hero-section text-center">
         <div class="container">
-            <h1 class="hero-title-compact">Освой искусство <br>программирования <span id="typewriter" class="typewriter-dynamic"></span></h1>
-            <p class="lead text-secondary mb-5">Интерактивная платформа: 50 заданий и тесты в одном месте.</p>
+            <h1 class="hero-title-compact"><span data-i18n="title">Освой искусство <br>программирования</span> <span id="typewriter" class="typewriter-dynamic"></span></h1>
+            <p class="lead text-secondary mb-5" data-i18n="subtitle">Интерактивная платформа: 50 заданий и тесты в одном месте.</p>
 
             {% if current_user.is_authenticated %}
-                <a href="/course" class="btn-main">Продолжить обучение</a>
+                <a href="/course" class="btn-main" data-i18n="continue">Продолжить обучение</a>
             {% else %}
-                <a href="/register" class="btn-main">Начать бесплатно</a>
+                <a href="/register" class="btn-main" data-i18n="start_btn">Начать бесплатно</a>
             {% endif %}
         </div>
     </header>
 
     <section class="container py-5">
         <div class="row g-4 text-center">
-            <div class="col-md-4"><div class="feature-card">🚀 <h4>Быстрый старт</h4><p class="text-secondary small">Просто открывай браузер и пиши код.</p></div></div>
-            <div class="col-md-4"><div class="feature-card">🧠 <h4>Умная практика</h4><p class="text-secondary small">Тесты после каждой темы для закрепления.</p></div></div>
-            <div class="col-md-4"><div class="feature-card">🏆 <h4>Геймификация</h4><p class="text-secondary small">XP и система рангов для мотивации.</p></div></div>
+            <div class="col-md-4"><div class="feature-card">🚀 <h4 data-i18n="f1_title">Быстрый старт</h4><p class="text-secondary small" data-i18n="f1_desc">Просто открывай браузер и пиши код.</p></div></div>
+            <div class="col-md-4"><div class="feature-card">🧠 <h4 data-i18n="f2_title">Умная практика</h4><p class="text-secondary small" data-i18n="f2_desc">Тесты после каждой темы для закрепления.</p></div></div>
+            <div class="col-md-4"><div class="feature-card">🏆 <h4 data-i18n="f3_title">Геймификация</h4><p class="text-secondary small" data-i18n="f3_desc">XP и система рангов для мотивации.</p></div></div>
         </div>
     </section>
 
     <footer class="text-center">
         <div class="logo opacity-50 mb-2">CODIFI<span>.LY</span></div>
-        <p style="color: var(--footer-gray); font-size: 0.85rem;">© 2026 Codifi.ly. Платформа для обучения.</p>
+        <p style="color: var(--footer-gray); font-size: 0.85rem;" data-i18n="footer">© 2026 Codifi.ly. Платформа для обучения.</p>
     </footer>
 
     <script>
-        // Эффект печатной машинки
-        const el = document.getElementById('typewriter');
-        const phrases = ['на Python.', 'с чистого листа.', 'на практике.', 'без боли.', 'с результатом.'];
+        const translations = {
+            ru: { 
+                my_lessons: "📚 Мои уроки", profile: "⚙️ Настройки (Профиль)", logout: "🚪 Выйти из аккаунта",
+                login: "Войти", continue: "Продолжить обучение", start_btn: "Начать бесплатно",
+                title: "Освой искусство <br>программирования", subtitle: "Интерактивная платформа: 50 заданий и тесты в одном месте.",
+                f1_title: "Быстрый старт", f1_desc: "Просто открывай браузер и пиши код.",
+                f2_title: "Умная практика", f2_desc: "Тесты после каждой темы для закрепления.",
+                f3_title: "Геймификация", f3_desc: "XP и система рангов для мотивации.",
+                footer: "© 2026 Codifi.ly. Платформа для обучения."
+            },
+            en: { 
+                my_lessons: "📚 My Lessons", profile: "⚙️ Settings (Profile)", logout: "🚪 Logout",
+                login: "Login", continue: "Continue Learning", start_btn: "Start for Free",
+                title: "Master the Art <br>of Programming", subtitle: "Interactive platform: 50 tasks and quizzes in one place.",
+                f1_title: "Quick Start", f1_desc: "Just open your browser and start coding.",
+                f2_title: "Smart Practice", f2_desc: "Quizzes after every topic for reinforcement.",
+                f3_title: "Gamification", f3_desc: "XP and rank system for motivation.",
+                footer: "© 2026 Codifi.ly. Learning Platform."
+            },
+            de: { 
+                my_lessons: "📚 Meine Lektionen", profile: "⚙️ Einstellungen (Profil)", logout: "🚪 Abmelden",
+                login: "Anmelden", continue: "Lernen fortsetzen", start_btn: "Kostenlos starten",
+                title: "Meistern Sie die Kunst <br>des Programmierens", subtitle: "Interaktive Plattform: 50 Aufgaben und Tests an einem Ort.",
+                f1_title: "Schnellstart", f1_desc: "Öffnen Sie einfach Ihren Browser und coden Sie.",
+                f2_title: "Schlaue Übung", f2_desc: "Tests nach jedem Thema zur Festigung.",
+                f3_title: "Gamification", f3_desc: "XP- und Rangsystem zur Motivation.",
+                footer: "© 2026 Codifi.ly. Lernplattform."
+            }
+        };
+
+        const phrases_ru = ['на Python.', 'с чистого листа.', 'на практике.', 'без боли.', 'с результатом.'];
+        const phrases_en = ['in Python.', 'from scratch.', 'in practice.', 'without pain.', 'with results.'];
+        const phrases_de = ['in Python.', 'von Grund auf.', 'in der Praxis.', 'ohne Schmerzen.', 'mit Ergebnissen.'];
+
+        function applyLang() {
+            const lang = localStorage.getItem('lang') || 'ru';
+            document.getElementById('nav-lang-select').value = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
+            });
+        }
+
+        function changeLang(val) {
+            localStorage.setItem('lang', val);
+            applyLang();
+            // Сбросим печатную машинку
+            phrases = val === 'en' ? phrases_en : (val === 'de' ? phrases_de : phrases_ru);
+            pIdx = 0; cIdx = 0; isDel = false;
+        }
+
+        let langStr = localStorage.getItem('lang') || 'ru';
+        let phrases = langStr === 'en' ? phrases_en : (langStr === 'de' ? phrases_de : phrases_ru);
         let pIdx = 0, cIdx = 0, isDel = false;
+        const el = document.getElementById('typewriter');
+        
         function type() {
             const cur = phrases[pIdx];
             el.textContent = isDel ? cur.substring(0, cIdx--) : cur.substring(0, cIdx++);
@@ -110,9 +173,12 @@
             else if (isDel && cIdx < 0) { isDel = false; pIdx = (pIdx + 1) % phrases.length; setTimeout(type, 500); }
             else setTimeout(type, isDel ? 60 : 120);
         }
-        type();
 
-        // Управление выпадающим меню профиля
+        window.onload = function() {
+            applyLang();
+            type();
+        };
+
         function toggleDropdown(event) {
             event.stopPropagation();
             document.getElementById('profileDropdown').classList.toggle('active');
@@ -122,9 +188,7 @@
             if (!event.target.closest('.profile-menu-container')) {
                 const dropdowns = document.getElementsByClassName("dropdown-menu-custom");
                 for (let i = 0; i < dropdowns.length; i++) {
-                    if (dropdowns[i].classList.contains('active')) {
-                        dropdowns[i].classList.remove('active');
-                    }
+                    dropdowns[i].classList.remove('active');
                 }
             }
         }
