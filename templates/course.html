@@ -52,8 +52,31 @@
         }
 
         /* Декоративные фоновые элементы */
-        .bg-circle-1 { position: absolute; top: -100px; left: -100px; width: 400px; height: 400px; background: rgba(56, 189, 248, 0.15); border-radius: 50%; filter: blur(80px); z-index: -1; pointer-events: none; }
-        .bg-circle-2 { position: absolute; bottom: -150px; right: -50px; width: 500px; height: 500px; background: rgba(129, 140, 248, 0.15); border-radius: 50%; filter: blur(100px); z-index: -1; pointer-events: none; }
+        .bg-circle-1 {
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: rgba(56, 189, 248, 0.15);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .bg-circle-2 {
+            position: absolute;
+            bottom: -150px;
+            right: -50px;
+            width: 500px;
+            height: 500px;
+            background: rgba(129, 140, 248, 0.15);
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            pointer-events: none;
+        }
 
         .custom-scroll::-webkit-scrollbar {
             width: 8px;
@@ -451,21 +474,79 @@
         }
 
         @media (max-width: 768px) {
-            body { overflow-y: auto !important; }
-            #main-wrapper { height: auto; }
+            body {
+                overflow-y: auto !important;
+            }
+
+            #main-wrapper {
+                height: auto;
+            }
+
             /* Гарантируем сайдбару минимум 320px, чтобы кнопки и список не схлопывались */
-            .sidebar { height: 50vh; min-height: 320px; border-right: none; border-bottom: 1px solid var(--border-color); }
-            .main-content { height: auto; min-height: 60vh; padding: 20px 15px; display: block; overflow-y: visible; }
-            .content-card { padding: 25px 20px; border-radius: 16px; margin-bottom: 30px; }
-            .manual-modal { width: 100%; height: 100vh; border-radius: 0; }
-            .manual-body { padding: 20px; }
-            .manual-header { padding: 20px; }
-            #l-title { font-size: 1.4rem; }
-            #l-theory h1, #l-theory h2, h2#q-question { font-size: 1.3rem !important; }
-            #l-theory p, #l-theory li { font-size: 0.95rem; }
-            #code-input { height: 200px; font-size: 12px; }
-            .quiz-option { padding: 14px 18px; font-size: 0.9rem; margin-top: 8px; }
-            .logo { padding: 15px; }
+            .sidebar {
+                height: 50vh;
+                min-height: 320px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .main-content {
+                height: auto;
+                min-height: 60vh;
+                padding: 20px 15px;
+                display: block;
+                overflow-y: visible;
+            }
+
+            .content-card {
+                padding: 25px 20px;
+                border-radius: 16px;
+                margin-bottom: 30px;
+            }
+
+            .manual-modal {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .manual-body {
+                padding: 20px;
+            }
+
+            .manual-header {
+                padding: 20px;
+            }
+
+            #l-title {
+                font-size: 1.4rem;
+            }
+
+            #l-theory h1,
+            #l-theory h2,
+            h2#q-question {
+                font-size: 1.3rem !important;
+            }
+
+            #l-theory p,
+            #l-theory li {
+                font-size: 0.95rem;
+            }
+
+            #code-input {
+                height: 200px;
+                font-size: 12px;
+            }
+
+            .quiz-option {
+                padding: 14px 18px;
+                font-size: 0.9rem;
+                margin-top: 8px;
+            }
+
+            .logo {
+                padding: 15px;
+            }
         }
     </style>
 </head>
@@ -473,7 +554,7 @@
 <body class="custom-scroll">
     <div class="bg-circle-1"></div>
     <div class="bg-circle-2"></div>
-    
+
     <script>
         if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
     </script>
@@ -589,7 +670,7 @@
                 // Добавляем ?t=... , чтобы обойти возможное кэширование старого JSON в браузере
                 const res = await fetch('/static/courses.json?t=' + new Date().getTime());
                 tasksData = await res.json();
-                
+
                 // Жестко фиксируем правильный порядок заданий по их числовому ID
                 tasksData.sort((a, b) => parseInt(a.id) - parseInt(b.id));
 
@@ -826,19 +907,19 @@
             }
 
             Sk.pre = "p-feedback";
-            Sk.configure({output: outf, read: builtinRead});
+            Sk.configure({ output: outf, read: builtinRead });
 
-            var myPromise = Sk.misceval.asyncToPromise(function() {
+            var myPromise = Sk.misceval.asyncToPromise(function () {
                 return Sk.importMainWithBody("<stdin>", false, prog, true);
             });
 
-            myPromise.then(function(mod) {
+            myPromise.then(function (mod) {
                 // Код успешно отработал
                 sounds.success.play();
 
                 if (currentLesson && currentLesson.id !== 'sandbox') {
                     showToast(translations[lang].completed);
-                    
+
                     if (!userProgress.includes(currentLesson.id)) {
                         userProgress.push(currentLesson.id);
                         updateGlobalProgress();
@@ -846,7 +927,7 @@
                         // Если в будущем добавим сохранение в БД, вызываем fetch здесь
                         fetch('/api/update_progress', {
                             method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
+                            headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ lesson_id: currentLesson.id })
                         }).catch(e => console.log(e));
                     }
@@ -865,11 +946,11 @@
                     showToast("Успешно выполнено!");
                 }
             },
-            function(err) {
-                // Обработка синтаксических ошибок в Python коде
-                output.style.color = "#ff7b72";
-                output.innerHTML += err.toString();
-            });
+                function (err) {
+                    // Обработка синтаксических ошибок в Python коде
+                    output.style.color = "#ff7b72";
+                    output.innerHTML += err.toString();
+                });
         }
 
         function updateGlobalProgress() {
